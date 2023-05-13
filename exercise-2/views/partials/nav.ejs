@@ -1,16 +1,33 @@
 <div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <a href="/"
-            class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <span><img class="logo" src="/images/rmit-store-logo.png" alt="RMIT logo"></span>
-        </a>
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+      <span><img class="logo" src="/images/rmit-store-logo.png" alt="RMIT logo"></span>
+    </a>
 
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Home</a></li>
-            <li class="nav-item"><a href="/#products" class="nav-link">Products</a></li>
-            <li class="nav-item"><a href="/order" class="nav-link">Order Now</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-        </ul>
-    </header>
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link" href="/dashboard">Products</a>
+      </li>
+      <% if (user && user.role === 'vendor') { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/manage-orders">Manage Orders</a>
+        </li>
+      <% } %>
+      <% if (user) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/profile">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+      <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/signup">Sign Up</a>
+        </li>
+      <% } %>
+    </ul>
+  </header>
 </div>

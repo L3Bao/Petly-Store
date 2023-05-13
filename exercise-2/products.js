@@ -40,7 +40,7 @@ const products = [
         name: "Portable Charger",
         price: 10,
         description: "A compact and powerful portable charger with multiple USB ports for charging your devices on the go."
-    }
+    },
 ];
 
 
