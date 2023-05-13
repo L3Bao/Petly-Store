@@ -81,32 +81,32 @@ app.get('/signup', (req, res) => {
 });
 app.post('/signup', async (req, res) => {
     const { username, password, role } = req.body;
-    
+
     try {
-      const existingUser = await User.findOne({ username });
-      
-      if (existingUser) {
-        const errorMessage = 'Username already exists';
-        return res.status(409).render('signup', { errorMessage, user: req.user });
-      }
-      
-      const user = new User({
-        username,
-        password,
-        role
-      });
-      
-      await user.save();
-      res.redirect('/login');
+        const existingUser = await User.findOne({ username });
+
+        if (existingUser) {
+            const errorMessage = 'Username already exists';
+            return res.status(409).render('signup', { errorMessage, user: req.user });
+        }
+
+        const user = new User({
+            username,
+            password,
+            role
+        });
+
+        await user.save();
+        res.redirect('/login');
     } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).send('An error occurred while creating the user');
+        console.error('Error creating user:', error);
+        res.status(500).send('An error occurred while creating the user');
     }
-  });
-  
-  
-  
-  
+});
+
+
+
+
 
 
 app.get('/', (req, res) => {
@@ -399,6 +399,29 @@ app.get('/order-page', async (req, res) => {
         res.status(500).send('An error occurred while retrieving products');
     }
 });
+app.post('/order-page', authenticate, async (req, res) => {
+    try {
+      const { customerName, products } = req.body;
+  
+      // Create a new order
+      const order = new Order({
+        customerName,
+        products
+      });
+  
+      // Save the order to the database
+      await order.save();
+  
+      // Redirect the user to the order summary page
+      res.redirect(`/order-summary/${order._id}`);
+    } catch (error) {
+      console.error('Error creating order:', error);
+      res.status(500).send('An error occurred while creating the order');
+    }
+  });
+  
+  
+
 app.post('/update-order/:id', authenticate, async (req, res) => {
     try {
         const orderId = req.params.id;
