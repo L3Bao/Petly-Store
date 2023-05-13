@@ -5,15 +5,15 @@
     </a>
 
     <ul class="nav nav-pills">
-      <li class="nav-item">
-        <a class="nav-link" href="/dashboard">Products</a>
-      </li>
       <% if (user && user.role === 'vendor') { %>
         <li class="nav-item">
           <a class="nav-link" href="/manage-orders">Manage Orders</a>
         </li>
       <% } %>
       <% if (user) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/dashboard">Products</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="/profile">Profile</a>
         </li>

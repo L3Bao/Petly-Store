@@ -4,6 +4,11 @@
 <main>
   <div class="container">
     <h1>Sign Up</h1>
+    <% if (errorMessage) { %>
+      <div class="alert alert-danger" role="alert">
+        <%= errorMessage %>
+      </div>
+    <% } %>
     <form action="/signup" method="POST">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
