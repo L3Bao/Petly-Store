@@ -1609,7 +1609,7 @@ select{
     align-items: center;
 }
 
-.tr .td:last-child, .th:last-child{
+.tr .td:last-child{
     text-align: center;
     justify-content: center;
     align-items: center;
