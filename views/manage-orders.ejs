@@ -15,32 +15,32 @@
       </div>
   </div>
   <div class="order-list-container">
-      <table class="table">
-          <tr class="tr">
-              <th class="th">Order-ID</th>
-              <th class="th">Name</th>
-              <th class="th">Product</th>
-              <th class="th">Total</th>
-              <th class="th">Action</th>
+      <table class="tables">
+          <tr class="trs">
+              <th class="ths">Order-ID</th>
+              <th class="ths">Name</th>
+              <th class="ths">Product</th>
+              <th class="ths">Total</th>
+              <th class="ths">Action</th>
           </tr>
           <% orders.forEach(function(order){ %>
-            <tr class tr>
-              <td class="td"><%= order._id %></td>
-              <td class="td"><%= order.customerName %></td>
-              <td class="td">
-                <ul>
-                  <% order.products.forEach(function(product){ %>
-                    <li><%= product.name %> - $<%= product.price %></li>
-                  <% }); %>
-                </ul>
-              </td>
-              <td>$<%= order.products.reduce((accumulator, product) => accumulator + product.price, 0).toFixed(2) %></td>
-              <td class="td">
-                <!-- Add the "Edit" and "Delete" buttons -->
-                <a href="/edit-order/<%= order._id %>" class="btn btn-primary">Edit</a>
-                <a href="/delete-order/<%= order._id %>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
-              </td>
-            </tr>
+          <tr class="trs">
+            <td class="tds"><%= order._id %></td>
+            <td class="tds"><%= order.customerName %></td>
+            <td class="tds">
+              <ul>
+                <% order.products.forEach(function(product){ %>
+                  <li><%= product.name %> - <span class="price">$<%= product.price %></span></li>
+                <% }); %>
+              </ul>
+            </td>
+            <td>$<%= order.products.reduce((accumulator, product) => accumulator + product.price, 0).toFixed(2) %></td>
+            <td class="tds" id="last-childe">
+              <!-- Add the "Edit" and "Delete" buttons -->
+              <a href="/edit-order/<%= order._id %>" class="edit-btn">Edit</a>
+              <a href="/delete-order/<%= order._id %>" class="edit-btn" onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
+            </td>
+          </tr>
           <% }); %>
       </table>
   </div>

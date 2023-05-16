@@ -10,7 +10,6 @@
             </div>
             <select name="status" id="status">
                 <option value="" disabled selected>Change Status</option>
-                <option value="text">Not Delivered</option>
                 <option value="text">Preparing</option>
                 <option value="text">Delivered</option>
             </select>
@@ -18,18 +17,11 @@
         <div class="body-container">
             <div class="customer">
                 <h4>Customer</h4>
-                <div class="name">Sampo</div>
-                <div class="mail">sampo@example.com</div>
+                <div class="name"><%= order.customerName %></div>
                 <div class="phone">09811122233</div>
             </div>
             <div class="order-info">
                 <h4>Order info</h4>
-                <div>Shipping: 
-                    <span id="ship-type">Fast</span>
-                </div>
-                <div>Payment method:
-                    <span id="payment-method">Cash</span>
-                </div>
                 <div>Address:
                     <span id="address">
                         221B Baker Street <br>
@@ -38,31 +30,21 @@
                 </div>
             </div>
         </div>
-        <div class="order-container">
-            <table class="order-detail">
-                <tr>
-                    <th>Product</th>
-                    <th>Unit Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
+        <div class="table-container">
+            <table class="table">
+                <tr class="tr">
+                    <th class="th">Product</th>
+                    <th class="th">Total</th>
                 </tr>
-                <tr>
-                    <td>
-                        <img src="/assets/images/product-5.jpg" width="30" height="30" loading="lazy" alt="Best Pet Supplies Crinkle Dog Toy" >
-                        Best Pet Supplies Crinkle Dog Toy
+                <tr class="tr">
+                    <td class="td">
+                        <ul>
+                            <% order.products.forEach(function(product){ %>
+                              <li><%= product.name %> - <span class="price">$<%= product.price %></span></li>
+                            <% }); %>
+                        </ul>
                     </td>
-                    <td id="price">$85.00</td>
-                    <td id="quantity">1</td>
-                    <td id="result">$85.00</td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="/assets/images/product-5.jpg" width="30px" height="30" loading="lazy" alt="Best Pet Supplies Crinkle Dog Toy" >
-                        Best Pet Supplies Crinkle Dog Toy
-                    </td>
-                    <td id="price">$85.00</td>
-                    <td id="quantity">1</td>
-                    <td id="result">$85.00</td>
+                    <td class="td" id="result">$<%= order.products.reduce((accumulator, product) => accumulator + product.price, 0).toFixed(2) %></td>
                 </tr>
             </table>
         </div>

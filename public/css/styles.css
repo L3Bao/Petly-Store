@@ -1592,33 +1592,27 @@ select{
     overflow-y: hidden;
 }
 
-.table{
-    margin-block: 20px 30px;
-    border-collapse: none;
-    border: 1px solid #bbb9b9;
-    width: 100%;
+.tables{
+  margin-block: 20px 30px;
+  border: 1px solid #bbb9b9;
+  width: 100%;
 }
 
-.th{
-    color: orange;
+.ths{
+  color: orange;
 }
 
-.th, .td{
-    padding: 10px;
-    text-align: left;
-    align-items: center;
+.ths, .tds{
+  padding: 10px;
+  text-align: left;
+  align-items: center;
 }
 
-.tr .td:last-child{
+
+.trs .tds:last-child{
     text-align: center;
     justify-content: center;
     align-items: center;
-}
-
-.tr .td:first-child{
-    display: flex;
-    overflow: hidden;
-
 }
 
 .filter-search{
@@ -1630,7 +1624,42 @@ select{
     margin: 30px 30px;
 }
 
+.edit-btn{
+  background-color: var(--black);
+  color: var(--white);
+  min-width: max-content;
+  padding: 8px 25px;
+  font-weight: var(--fw-700);
+  border-radius: 50px;
+  transition: var(--transition-1);
+}
+
+#last-childe a{
+  padding: 5px;
+  margin-block: 3px;
+}
 /*Detail page*/
+.table{
+  margin: 20px 30px;
+  border-top: 1px solid #bbb9b9;
+  width: 80%;
+}
+
+.th{
+  color: orange;
+}
+
+.th, .td{
+  padding: 10px;
+  text-align: left;
+  align-items: center;
+}
+
+.tr .td:first-child{
+  display: flex;
+  overflow: hidden;
+}
+
 #return{
     margin: 20px;
     width: 200px;
@@ -1660,6 +1689,7 @@ select{
 
 .body-container{
     display: flex;
+    padding-inline: 20px;
 }
 
 .body-container div, h4{
@@ -1674,6 +1704,11 @@ select{
 #status{
     width: 10%;
     padding: 10px;
+}
+
+.price{
+  color: orange;
+  display: inline;
 }
 /*-----------------------------------*\
   #MEDIA QUERIES
