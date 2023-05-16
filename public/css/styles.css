@@ -1757,3 +1757,221 @@ select{
         width: 13%;
     }
 }
+
+
+/*---------------------------
+      SHIPPER / DETAIL PAGE
+----------------------------*/      
+
+/* Fixing the layout issue */
+main{
+  margin: 110px auto 10px auto;
+}
+
+.user_advice{
+  text-align: center;
+  color: grey;
+}
+
+.vendor_name{
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  width: 80%;
+  margin: auto;
+}
+
+.vendor_name p{
+  margin-left: 5px;
+}
+
+/* The content container */
+.order_container{
+  margin: 0 auto ;
+  width: 90%;
+  background-color: rgba(245, 240, 240, 0.384);
+}
+
+/*order status and ID*/
+.order_status{
+  text-align: center;
+  font-size: 25px;
+  background-color:#2d2a30;
+  color: white;
+}
+
+.order_status p{
+  margin: auto;
+}
+
+/* user information container*/
+
+.user_info_container{
+  width: 80%;
+  margin: 10px auto 0 auto;
+  font-size: 20px;
+  border-bottom-style: solid;
+  border-color: #2d2a30;
+  margin-bottom: 10px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.address_container p{
+  font-size: 15px;
+}
+
+.address_container{
+
+  margin-left: 10px;
+}
+
+.avatar_username_phonenum{
+  display: flex;
+  flex-direction: row;
+}
+
+.user_info_container img{
+  border-radius: 50%;
+  border-style: solid;
+  height: 30px;
+  margin: 10px;
+}
+
+.user_name{
+  font-size: 15px;
+}
+
+.phone_num{
+  font-size:13px;
+  color:hsl(0, 0%, 53%)
+}
+
+
+/* buttons layout */
+.buttons_container{
+
+  display: flex;
+  align-content: space-between;
+  justify-content: space-around;
+  margin-bottom: 5px;
+}
+  /*button styles */
+
+  .finish_btn{
+    height:40px;
+    width: 75px;
+    font-size: 20px;
+    background-color:#fe5500;
+    color: white;
+    border-style: solid;
+    border-color:#2d2a30;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+  .details_btn{
+    height:40px;
+    width: 75px;
+    font-size: 20px;
+    background-color:white ;
+    color:#2d2a30;
+    border-style: solid;
+    border-color:#2d2a30;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+
+  .cancle_btn{
+    height:40px;
+    width: 75px;
+    font-size: 20px;
+    background-color:white ;
+    color:#2d2a30;
+    border-style: solid;
+    border-color:#2d2a30;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+
+  .finish_btn:active,
+  .details_btn:active{
+    opacity: 0.5;
+    transition: opacity 0.1s;
+  }
+
+  .cancel_btn:active{
+    background-color: red;
+    color: white;
+  }
+  
+  /* product list */
+  .product_list{
+    width: 80%;
+    margin: 10px auto 10px auto;
+  }
+
+  .product_list h3{
+    font-size: 20px;
+  }
+
+  .product_list ul{
+    margin-left: 20px;
+    list-style-type: circle;
+  }
+
+  /*milestone*/
+  .product_list{
+    width: 80%;
+    margin: 10px auto 10px auto;
+  }
+
+  .product_list h3{
+    font-size: 20px;
+  }
+
+  .product_list ul{
+    margin-left: 20px;
+    list-style-type: circle;
+  }
+
+
+/* product list */
+.product_list{
+  margin: 10px auto 10px auto;
+  width: 80%;
+}
+
+.product_list h3{
+  font-size: 20px;
+}
+
+.product_list ul{
+  margin-left: 40px;
+}
+
+/* milestone */
+.milestone{
+  margin: 10px auto 10px auto;
+  width: 80%;
+}
+
+.milestone h3{
+  font-size: 20px
+}
+
+.milestone ul{
+  margin-left: 40px;
+}
+
+/* total price */
+.total_price{
+  margin: 10px auto 10px auto;
+  width: 80%;
+  text-align: center;
+}
+
+.total_price span{
+  color:#e0ac1c;
+}
