@@ -1,34 +1,71 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
 
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="mt-5">Edit Order</h1>
-      <form action="/update-order/<%= order._id %>" method="POST">
-        <div class="mb-3">
-          <label for="customerName" class="form-label">Customer Name</label>
-          <input type="text" class="form-control" id="customerName" name="customerName" value="<%= order.customerName %>" required>
-        </div>
-        <div class="mb-3">
-          <label>Choose product(s):</label><br>
-          <% products.forEach(function(product) { %>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="products" value="<%= product._id %>" id="product<%= product._id %>"
-              <% order.products.forEach(function(orderedProduct) { %>
-                <% if (orderedProduct._id.equals(product._id)) { %>
-                  checked
-                <% } %>
-              <% }); %>
-              >
-              <label class="form-check-label" for="product<%= product._id %>"><%= product.name %> - $<%= product.price %></label>
+<button id="return"><a href="/manage-orders">RETURN TO ORDERS</a></button>
+    <div class="h-container">
+        <div class="header-container">
+            <div class="info">
+                <div class="date-time">May 4th 2023</div>
+                <div class="id">Order-ID: </div>
             </div>
-          <% }); %>
+            <select name="status" id="status">
+                <option value="" disabled selected>Change Status</option>
+                <option value="text">Not Delivered</option>
+                <option value="text">Preparing</option>
+                <option value="text">Delivered</option>
+            </select>
         </div>
-        <button type="submit" class="btn btn-primary">Update Order</button>
-      </form>
+        <div class="body-container">
+            <div class="customer">
+                <h4>Customer</h4>
+                <div class="name">Sampo</div>
+                <div class="mail">sampo@example.com</div>
+                <div class="phone">09811122233</div>
+            </div>
+            <div class="order-info">
+                <h4>Order info</h4>
+                <div>Shipping: 
+                    <span id="ship-type">Fast</span>
+                </div>
+                <div>Payment method:
+                    <span id="payment-method">Cash</span>
+                </div>
+                <div>Address:
+                    <span id="address">
+                        221B Baker Street <br>
+                        London
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="order-container">
+            <table class="order-detail">
+                <tr>
+                    <th>Product</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="/assets/images/product-5.jpg" width="30" height="30" loading="lazy" alt="Best Pet Supplies Crinkle Dog Toy" >
+                        Best Pet Supplies Crinkle Dog Toy
+                    </td>
+                    <td id="price">$85.00</td>
+                    <td id="quantity">1</td>
+                    <td id="result">$85.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="/assets/images/product-5.jpg" width="30px" height="30" loading="lazy" alt="Best Pet Supplies Crinkle Dog Toy" >
+                        Best Pet Supplies Crinkle Dog Toy
+                    </td>
+                    <td id="price">$85.00</td>
+                    <td id="quantity">1</td>
+                    <td id="result">$85.00</td>
+                </tr>
+            </table>
+        </div>
     </div>
-  </div>
-</div>
 
 <%- include ('partials/footer') %>
