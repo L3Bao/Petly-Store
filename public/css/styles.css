@@ -1978,14 +1978,16 @@ main{
 
 /* login */
 .login-btn{
+  margin-top: 4rem;
   display: flex;
+  justify-content: space-evenly;
 }
 
 .log-btn{
-  min-width: 10%;
-  font-size: 20px;
-  background-color:orange;
-  color: #111;
+  min-width: 20%;
+  font-size: 30px;
+  background-color:var(--red);
+  color: var(--white);
   border-style: solid;
   border-color:#2d2a30;
   border-radius: 15px;
@@ -1994,12 +1996,12 @@ main{
 }
 
 .sign-btn{
-  min-width: 10%;
-  font-size: 20px;
-  background-color: #111;
-  color: orange;
+  min-width: 20%;
+  font-size: 30px;
+  background-color: cyan;
+  color: rebeccapurple;
   border-style: solid;
-  border-color: grey;
+  border-color: var(--black);
   border-radius: 15px;
   margin-top: 5px;
   margin-left: 5px;
