@@ -9,16 +9,19 @@
     </div>
     <% } %>
     <form action="/login" method="POST">
-      <div class="mb-3">
+      <div class="form">
         <label for="username" class="form-label">Username</label>
         <input type="text" class="form-control" id="username" name="username" required>
       </div>
-      <div class="mb-3">
+      <div class="form">
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
-      <button type="submit" class="btn btn-primary">Login</button>
-      <button type="submit" class="btn btn-primary"><a href="/signup">Sign up</a></button>
+      <div class="login-btn">
+        <button type="submit" class="log-btn">Login</button>
+        <button type="submit" class="sign-btn"><a href="/signup">Sign up</a></button>
+      </div>
+      
     </form>
   </div>
 </main>
