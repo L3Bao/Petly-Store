@@ -8,21 +8,23 @@
       <%= errorMessage %>
     </div>
     <% } %>
-    <form action="/login" method="POST">
-      <div class="form">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" required>
-      </div>
-      <div class="form">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-      </div>
-      <div class="login-btn">
-        <button type="submit" class="log-btn">Login</button>
-        <button type="submit" class="sign-btn"><a href="/signup">Sign up</a></button>
-      </div>
-      
-    </form>
+    <div class="add-product">
+      <form action="/login" method="POST">
+        <div class="form">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="login-btn">
+          <button type="submit" class="log-btn">Login</button>
+          <button type="submit" class="sign-btn"><a href="/signup">Sign up</a></button>
+        </div>
+        
+      </form>
+    </div>
   </div>
 </main>
 
