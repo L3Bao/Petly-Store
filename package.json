@@ -4,7 +4,7 @@
   "description": "RMIT Store",
   "main": "index.js",
   "scripts": {
-    "start":"nodemon index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tom Huynh",
@@ -19,5 +19,8 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0"
   },
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
