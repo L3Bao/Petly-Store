@@ -11,6 +11,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt');
+
 
 app.use(session({
     secret: 'your-secret-key', // Replace with your own secret key
@@ -28,14 +30,19 @@ passport.use(new LocalStrategy(async (username, password, done) => {
         if (!user) {
             return done(null, false, { message: 'Incorrect username.' });
         }
-        if (user.password !== password) {
+
+        // Compare hashed password with the entered password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return done(null, false, { message: 'Incorrect password.' });
         }
+        
         return done(null, user);
     } catch (error) {
         return done(error);
     }
 }));
+
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -79,30 +86,39 @@ connectDB();
 app.get('/signup', (req, res) => {
     res.render('signup', { user: req.user }); // Pass the user variable to the signup template
 });
-app.post('/signup', async (req, res) => {
-    const { username, password, role } = req.body;
-
+app.post('/signup', upload.single('profilePicture'), async (req, res) => {
+    const { username, password, role, businessName, businessAddress, customerAddress, distributionHub } = req.body;
+  
     try {
-        const existingUser = await User.findOne({ username });
-
-        if (existingUser) {
-            const errorMessage = 'Username already exists';
-            return res.status(409).render('signup', { errorMessage, user: req.user });
-        }
-
-        const user = new User({
-            username,
-            password,
-            role
-        });
-
-        await user.save();
-        res.redirect('/login');
+      const existingUser = await User.findOne({ username });
+  
+      if (existingUser) {
+        const errorMessage = 'Username already exists';
+        return res.status(409).render('signup', { errorMessage, user: req.user });
+      }
+  
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const user = new User({
+        username,
+        password: hashedPassword, // Store the hashed password in the database
+        role,
+        businessName, // Save business name if provided
+        businessAddress, // Save business address if provided
+        customerAddress, // Save customer address if provided
+        distributionHub, // Save distribution hub if provided
+        profilePicture: req.file ? req.file.path : null, // Save profile picture if provided
+      });
+  
+      await user.save();
+      res.redirect('/login');
     } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).send('An error occurred while creating the user');
+      console.error('Error creating user:', error);
+      res.status(500).send('An error occurred while creating the user');
     }
-});
+  });
+  
 
 
 
@@ -117,12 +133,15 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login', { user: req.user }); // Pass the user variable to the login template
 });
+
 app.get('/dashboard', (req, res) => {
     if (req.user && req.user.role) {
         if (req.user.role === 'vendor') {
             res.redirect('/vendor-dashboard');
         } else if (req.user.role === 'customer') {
             res.redirect('/customer-dashboard');
+        } else if (req.user.role === 'shipper') {
+            res.redirect('/shipper');
         } else {
             res.status(403).send('Access denied');
         }
@@ -130,7 +149,6 @@ app.get('/dashboard', (req, res) => {
         res.redirect('/login');
     }
 });
-
 
 app.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
@@ -155,12 +173,15 @@ app.post('/login', (req, res, next) => {
                 return res.redirect('/vendor-dashboard');
             } else if (req.user.role === 'customer') {
                 return res.redirect('/customer-dashboard');
+            } else if (req.user.role === 'shipper') {
+                return res.redirect('/shipper');
             } else {
                 return res.status(403).send('Access denied');
             }
         });
     })(req, res, next);
 });
+
 
 
 // Middleware to check if user is authenticated and has the required role
@@ -195,6 +216,18 @@ app.get('/manage-orders', authenticate, async (req, res) => {
     }
 });
 
+app.get('/shipper', async (req, res) => {
+    try {
+        const { distributionHub } = req.user;
+        const orders = await Order.find({ 'distributionHub': distributionHub }).populate('products');
+        const user = req.user;
+        
+        res.render('shipper', { orders, user });
+    } catch (error) {
+        console.error('Error retrieving orders:', error);
+        res.status(500).send('An error occurred while retrieving orders');
+    }
+});
 
 
 app.get('/vendor-dashboard', async (req, res) => {

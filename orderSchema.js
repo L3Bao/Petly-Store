@@ -8,6 +8,11 @@ const orderSchema = new mongoose.Schema({
       ref: 'Product'
     }
   ],
+  status: {
+    type: String,
+    enum: ['active', 'completed', 'cancelled'],
+    default: 'active'
+  },
   date: {
     type: Date,
     default: Date.now

@@ -14,7 +14,29 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ['customer', 'vendor']
+    enum: ['customer', 'vendor', 'shipper']
+  },
+  businessName: {
+    type: String
+  },
+  businessAddress: {
+    type: String
+  },
+  customerAddress: {
+    type: String
+  },
+  distributionHub: {
+    type: String,
+    enum: ['hanoi', 'hcm', 'danang'],
+    required: function () {
+      return this.role === 'shipper';
+    }
+  },
+  profilePicture: {
+    type: String
+  },
+  name: {
+    type: String
   }
 });
 

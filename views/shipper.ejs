@@ -1,36 +1,40 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 
-    <main>
-      <p class="user_advice">*Open on mobile for a better user experience!</p>
+<main>
+  <h1>Shipper Dashboard</h1>
+  <% if (orders.length > 0) { %>
+    <% orders.forEach((order) => { %>
       <div class="order_container">
         <div class="order_status">
-          <!--the order ID goes here-->
-          <p>Active order #112</p>
+          <p>Active order #<%= order._id %></p>
         </div>
         <div class="user_info_container">
           <div class="avatar_username_phonenum">
-            <img src="assets/images/brand-3.jpg" alt="user_avatar">
+            <img src="<%= order.customer.profilePicture %>" alt="user_avatar">
             <div class="user_info">
-              <!--username and phonenumber will be taken from the database-->
               <div class="user_name">
-                <p>cock and ball destroyer</p>
+                <p><%= order.customer.username %></p>
               </div>
               <div class="phone_num">
-                <p>0966666666</p>
+                <p><%= order.customer.phone %></p>
               </div>
             </div>
           </div>
-          <!--address will be taken from the database-->
           <div class="address_container">
-            <p>Address: Testing testing testing testing</p>
+            <p>Address: <%= order.customer.address %></p>
           </div>
         </div>
-        <!--this will lead to the detail page of the  order-->
         <div class="buttons_container">
-          <a href="/shipper-details"><button class="details_btn">Details</button></a>
+          <a href="/order-details/<%= order._id %>">
+            <button class="details_btn">Details</button>
+          </a>
         </div>
       </div>
-    </main>
+    <% }) %>
+  <% } else { %>
+    <p>No orders available.</p>
+  <% } %>
+</main>
 
 <%- include ('partials/footer') %>
