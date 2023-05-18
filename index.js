@@ -86,45 +86,46 @@ connectDB();
 app.get('/signup', (req, res) => {
     res.render('signup', { user: req.user }); // Pass the user variable to the signup template
 });
+const path = require('path');
+
 app.post('/signup', upload.single('profilePicture'), async (req, res) => {
-    const { username, password, role, businessName, businessAddress, customerAddress, distributionHub } = req.body;
-  
-    try {
-      const existingUser = await User.findOne({ username });
-  
-      if (existingUser) {
-        const errorMessage = 'Username already exists';
-        return res.status(409).render('signup', { errorMessage, user: req.user });
-      }
-  
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      const user = new User({
-        username,
-        password: hashedPassword, // Store the hashed password in the database
-        role,
-        businessName, // Save business name if provided
-        businessAddress, // Save business address if provided
-        customerAddress, // Save customer address if provided
-        distributionHub, // Save distribution hub if provided
-        profilePicture: req.file ? req.file.path : null, // Save profile picture if provided
-      });
-  
-      await user.save();
-      res.redirect('/login');
-    } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).send('An error occurred while creating the user');
+  const { username, password, role, businessName, businessAddress, customerAddress, distributionHub } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ username });
+
+    if (existingUser) {
+      const errorMessage = 'Username already exists';
+      return res.status(409).render('signup', { errorMessage, user: req.user });
     }
-  });
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const profilePicturePath = req.file ? req.file.path : null;
+    const profilePicture = profilePicturePath ? path.relative('public', profilePicturePath).replace(/\\/g, '/') : null;
+
+    const user = new User({
+      username,
+      password: hashedPassword, // Store the hashed password in the database
+      role,
+      businessName, // Save business name if provided
+      businessAddress, // Save business address if provided
+      customerAddress, // Save customer address if provided
+      distributionHub, // Save distribution hub if provided
+      profilePicture, // Save profile picture if provided with forward slashes in the path and "public" part removed
+    });
+
+    await user.save();
+    res.redirect('/login');
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).send('An error occurred while creating the user');
+  }
+});
+
   
-
-
-
-
-
-
+  
 app.get('/', (req, res) => {
     res.redirect('/login');
 });

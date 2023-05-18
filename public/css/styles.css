@@ -1764,7 +1764,7 @@ select{
 ----------------------------*/      
 
 /* Fixing the layout issue */
-main{
+.shipper-main{
   margin: 110px auto 10px auto;
 }
 
@@ -1842,6 +1842,15 @@ main{
 
 .user_name{
   font-size: 15px;
+}
+
+.shipper_advice{
+  color: grey;
+  text-align: center;;
+}
+
+.shipper-title{
+  text-align: center;
 }
 
 .phone_num{
@@ -2005,4 +2014,24 @@ main{
   border-radius: 15px;
   margin-top: 5px;
   margin-left: 5px;
+}
+
+
+
+/* profile picture container */
+.profile-container{
+  background-color: blue;
+  width:90%;
+  margin: 10px auto 10px auto;
+}
+
+.profile-picture-container img{
+  border-radius: 4px;
+  width: 40%;
+  margin: 10px auto 10px auto;
+}
+
+.signout-savechanges-buttons{
+  display: flex;
+  flex-direction: row;
 }

@@ -2,7 +2,9 @@
 <%- include('partials/nav') %>
 
 <main>
-  <h1>Shipper Dashboard</h1>
+  <p class="shipper_advice">Open this page on a mobile device for a better user experience!</p>
+  <h1 class="shipper=title">Shipper Dashboard</h1>
+
   <% if (orders.length > 0) { %>
     <% orders.forEach((order) => { %>
       <div class="order_container">
