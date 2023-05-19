@@ -185,26 +185,30 @@ app.post("/cart", async (req, res) => {
     res.redirect("/");
   }
 });
-app.get("/product/:id", async (req, res) => {
-    try {
-      const productId = req.params.id;
-  
-      if (!mongoose.Types.ObjectId.isValid(productId)) {
-        return res.status(400).send("Invalid product ID");
-      }
-  
-      const product = await Product.findOne({ _id: productId });
-  
-      if (!product) {
-        return res.status(404).send("Product not found");
-      }
-  
-      res.render("product", { product, user: req.user });
-    } catch (error) {
-      console.error("Error retrieving product:", error);
-      res.status(500).send("An error occurred while retrieving the product");
-    }
-  });
+
+// Add a new route to display products with the category "cat page"
+app.get("/products/cat-page", async (req, res) => {
+  try {
+    const catPageProducts = await Product.find({ category: "cat page" });
+    res.render("cat-page-products", { products: catPageProducts, user: req.user });
+  } catch (error) {
+    console.error("Error retrieving cat page products:", error);
+    res.status(500).send("An error occurred while retrieving cat page products");
+  }
+});
+
+// Add a new route to display products with the category "dog page"
+app.get("/products/dog-page", async (req, res) => {
+  try {
+    const products = await Product.find({ category: "dog page" });
+
+    res.render("dog-page-products", { products });
+  } catch (error) {
+    console.error("Error retrieving dog page products:", error);
+    res.status(500).send("An error occurred while retrieving dog page products");
+  }
+});
+
 
 app.get("/cart", async (req, res) => {
   const cartProductIds = req.session.cartProductIds || [];
@@ -232,6 +236,8 @@ app.get("/cart", async (req, res) => {
     res.redirect("/");
   }
 });
+
+
 // place an order
 app.post("/placeOrder", async (req, res) => {
   // get customer information from form

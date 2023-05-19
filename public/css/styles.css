@@ -885,11 +885,25 @@ body {
 /*-----------------------------------*\
   #DETAIL PAGE 
 \*-----------------------------------*/
+.product-card{
+  border-style: solid;
+  width: 100px;
+  
+}
+
+.product-card img{
+  width: 200px;
+  
+}
+
 #details{
   display: flex;
   width: 100%;
   padding: 40px;
   margin-top: 50px;
+  flex-wrap: wrap;
+  margin: auto auto;
+  justify-content: space-between;
 }
 
 #details .big-img{

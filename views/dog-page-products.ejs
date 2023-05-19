@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dog Page Products</title>
+</head>
+<body>
+  <h1>Dog Page Products</h1>
+  
+  <% if (products.length === 0) { %>
+    <p>No products found in the Dog Page category.</p>
+  <% } else { %>
+    <ul>
+      <% products.forEach((product) => { %>
+        <li>
+          <h3><%= product.name %></h3>
+          <p>Price: <%= product.price %></p>
+          <p>Description: <%= product.description %></p>
+          <!-- Add more details as needed -->
+        </li>
+      <% }); %>
+    </ul>
+  <% } %>
+
+  <!-- Add any additional HTML, CSS, or JavaScript as needed -->
+</body>
+</html>

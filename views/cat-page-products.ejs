@@ -1,0 +1,40 @@
+<%- include ('partials/head') %>
+<%- include ('partials/nav') %>
+
+
+<main>
+<body>
+    <section class="section sale-banner has-bg-image" id="home" aria-label="home"
+    style="background-image: url('/images/cat-sale-banner.png')">
+    <div class="container">
+
+      <h1 class="h1 sale-banner-title">
+        <span class="span">Sale up to</span>70%
+      </h1>
+
+      <p class="sale-banner-text">*Cat Accessories</p>
+
+    </div>
+  </section>
+  
+  <% if (products.length === 0) { %>
+    <p>No products found in the Cat Page category.</p>
+  <% } else { %>
+        <div id="details">
+        <% products.forEach((product) => { %>
+            <div class="product-card">
+              <img src="/images/<%=product.image%>" width="360" height="360" alt="product image">
+              <h3><%= product.name %></h3>
+              <p>Price: <%= product.price %></p>
+              <!-- <p>Description: <%= product.description %></p> -->
+              <!-- Add more details as needed -->
+            </div>
+        <% }); %>
+          </div>
+  <% } %>
+
+  <!-- Add any additional HTML, CSS, or JavaScript as needed -->
+</body>
+</main>
+
+<%- include ('partials/footer') %>

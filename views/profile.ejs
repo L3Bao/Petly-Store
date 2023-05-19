@@ -5,7 +5,11 @@
   <div class="container">
     <h1>Profile</h1>
     <div class="profile-picture-container">
-      <img src="<%= user.profilePicture.replace('public\\', '/') %>" alt="Profile Picture" class="profile-picture">
+      <img src="<%= user.profilePicture.replace('public', '').replace(/\\/g, '/') %>" alt="Profile Picture" class="profile-picture">
+      <div class="mb-2">
+        <label for="profilePicture" class="form-label">Profile Picture</label>
+        <input type="file" class="form-control" id="profilePicture" name="profilePicture">
+      </div>
     </div>
 
     <% if (user.role === 'customer') { %>
@@ -33,7 +37,7 @@
       </div>
     <% } %>
 
-    <form action="/profile" method="POST">
+    <form action="/profile" method="POST" enctype="multipart/form-data">
       <div class="mb-2">
         <label for="username" class="form-label">Username</label>
         <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required>

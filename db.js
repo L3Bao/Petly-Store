@@ -12,10 +12,10 @@ async function connectDB() {
       console.log('Connected to MongoDB');
   
       const existingProducts = await Product.find();
-      const existingProductIds = existingProducts.map(product => product.id);
-  
-      const newProducts = products.filter(product => !existingProductIds.includes(product.id));
-  
+      const existingProductNames = existingProducts.map(product => product.name);
+
+      const newProducts = products.filter(product => !existingProductNames.includes(product.name));
+      
       if (newProducts.length > 0) {
         console.log('Updating product data in MongoDB...');
   
@@ -30,4 +30,3 @@ async function connectDB() {
   }
   
   module.exports = connectDB;
-  
