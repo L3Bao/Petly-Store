@@ -1,10 +1,8 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 
-<main>
-  <h1>Shipper Dashboard</h1>
-  <% if (orders.length > 0) { %>
-    <% orders.forEach((order) => { %>
+    <main class="shipper_main">
+      <p class="user_advice">*Open on mobile for a better user experience!</p>
       <div class="order_container">
         <div class="order_status">
           <p>Active order #<%= order._id %></p>

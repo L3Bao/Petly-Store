@@ -1,0 +1,18 @@
+<h1>Search Results</h1>
+
+
+
+<% if (products.length === 0) { %>
+  <p>No products found for the search query.</p>
+<% } else { %>
+    <div id="searchResultsContainer"> 
+        <ul>
+            <% products.forEach((product) => { %>
+            <li>
+                <h3><%= product.name %></h3>
+                <p><%= product.description %></p>
+            </li>
+            <% }) %>
+        </ul>
+    </div>
+<% } %>

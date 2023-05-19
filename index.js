@@ -12,6 +12,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
 
 
 app.use(session({
@@ -22,6 +23,17 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+    if (!req.session.cart) {
+        req.session.cart = {
+            items: {},
+            totalQty: 0,
+            totalPrice: 0
+        };
+    }
+    next();
+});
 
 // Passport configuration
 passport.use(new LocalStrategy(async (username, password, done) => {
@@ -121,8 +133,135 @@ app.post('/signup', upload.single('profilePicture'), async (req, res) => {
   
 
 
+  /* Route to get the cart page */
+// app.post('/add-to-cart/:id', (req, res) => {
+//     const productId = req.params.id;
+//     const cart = req.session.cart;
+  
+//     // Query the database to get the price of the item
+//     Product.findById(productId)
+//       .then(product => {
+//         if (!product) {
+//           console.log("Product not found");
+//           return res.redirect('/customer-dashboard');
+//         }
+  
+//         // Check if this product is already in the cart
+//         if (!cart.items[productId]) {
+//           cart.items[productId] = {
+//             item: product,
+//             qty: 1,
+//             price: product.price
+//           };
+//           cart.totalQty++;
+//           cart.totalPrice += product.price;
+//         } else {
+//           cart.items[productId].qty++;
+//           cart.totalQty++;
+//           cart.totalPrice += product.price;
+//         }
+  
+//         res.redirect('/cart');
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         res.redirect('/');
+//       });
+//   });
+//   app.get('/cart', (req, res) => {
+//     const cart = req.session.cart;
+  
+//     if (!cart || Object.keys(cart.items).length === 0) {
+//       // If the cart is empty or no items are present
+//       return res.render('cart', { cart: null });
+//     }
+  
+//     const productIds = Object.keys(cart.items);
+  
+//     // Fetch the products associated with the cart items from the database
+//     Product.find({ _id: { $in: productIds } })
+//       .then(products => {
+//         // Create an array to store the updated cart items with product details
+//         const updatedCartItems = productIds.map(productId => ({
+//           item: products.find(product => product._id.toString() === productId),
+//           qty: cart.items[productId].qty,
+//           price: cart.items[productId].price
+//         }));
+  
+//         res.render('cart', { cart: { items: updatedCartItems, totalQty: cart.totalQty, totalPrice: cart.totalPrice } });
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         res.redirect('/');
+//       });
+//   });
+  
+
+  app.post('/cart', async (req, res) => {
+    const productId = req.body.productId;
+  
+    try {
+      // Retrieve the product from the database using the ObjectId
+      const product = await Product.findById(productId);
+  
+      if (!product) {
+        console.log("Product not found");
+        return res.redirect('/');
+      }
+  
+      // Log the ObjectId of the product
+      console.log("Product ObjectId:", product._id);
+  
+      // Add the product ObjectId to the cartProductIds array
+      req.session.cartProductIds = req.session.cartProductIds || [];
+      req.session.cartProductIds.push(product._id);
+  
+      // Redirect or send a response back to the client
+      res.redirect('/cart');
+    } catch (err) {
+      console.log(err);
+      res.redirect('/');
+    }
+  });
 
 
+  
+  app.get('/cart', async (req, res) => {
+    const cartProductIds = req.session.cartProductIds || [];
+  
+    try {
+      // Fetch all the products associated with the cartProductIds from the database
+      const products = await Product.find({ _id: { $in: cartProductIds } });
+  
+      console.log("User Object:", req.user); // Log the user object
+      console.log("User Role:", req.user.role); // Log the user role
+  
+      res.render('cart', { products: products, user: req.user }); // Include the user object in the rendering context
+    } catch (err) {
+      console.log(err);
+      res.redirect('/');
+    }
+  });
+  
+  
+    
+    // Price filter //
+app.get('/products', async (req, res) => {
+    try {
+        const minPrice = req.query.minPrice || 0;  // Use 0 as the default minPrice
+        const maxPrice = req.query.maxPrice || Number.MAX_SAFE_INTEGER;  // Use the maximum number as the default maxPrice
+        const user = req.user; // get the user object from the request
+
+        const products = await Product.find({ price: { $gte: minPrice, $lte: maxPrice } });
+
+        // Include the user when rendering the 'products' view
+        res.render('products', { products, user });  
+    } catch (error) {
+        console.error('Error retrieving products:', error);
+        res.status(500).send('An error occurred while retrieving products');
+    }
+});
+  
 
 
 app.get('/', (req, res) => {
@@ -454,7 +593,22 @@ app.post('/order-page', authenticate, async (req, res) => {
   });
   
   
+//  Route get and render the product detail page for a specific product
+app.get('/product-detail/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const product = await Product.findById(id); 
 
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+
+        res.render('product-detail', { product, user: req.user }); 
+    } catch (error) {
+        console.error('Error retrieving product:', error);
+        res.status(500).send('An error occurred while retrieving the product');
+    }
+});
 app.post('/update-order/:id', authenticate, async (req, res) => {
     try {
         const orderId = req.params.id;
@@ -514,13 +668,20 @@ app.post('/update-order/:id', authenticate, async (req, res) => {
     }
 });
 
+  
+// Add the body-parser middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
+app.post('/getProduct', async (req, res) => {
+    let payload = req.body.payload.trim();
+    let search = await Product.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
+    // Limit Search Results to 10
+    search = search.slice(0, 10);
+    res.send({ payload: search });
+  });
+  
 
-
-
-
-
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
-});
-
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+  });
