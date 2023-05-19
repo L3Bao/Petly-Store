@@ -1,18 +1,13 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
 
-<h1 id="header">Order</h1>
+<div class="main-orders">
 <div class="list-order">
-  <div class="filter-search">
-      <div class="search-bar">
-          <input type="text" placeholder="search">
-      </div>
-      <div id="filter">
-          <select name="" id="">
-              <option value="">Order-ID</option>
-              <option value="">Status</option>
-          </select>
-      </div>
+  <div id="filter">
+      <select name="" id="">
+          <option value="">Order-ID</option>
+          <option value="">Status</option>
+      </select>
   </div>
   <div class="order-list-container">
       <table class="tables">
@@ -44,6 +39,7 @@
           <% }); %>
       </table>
   </div>
+</div>
 </div>
 
 <%- include ('partials/footer') %>

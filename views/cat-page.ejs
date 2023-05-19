@@ -1,0 +1,100 @@
+<%- include ('partials/header') %>
+<%- include ('partials/nav') %>
+
+<main>
+
+    <!-- 
+       - #SALE-BANNER
+    -->
+
+     <section class="section sale-banner has-bg-image" id="home" aria-label="home"
+       style="background-image: url('/images/cat-sale-banner.png')">
+       <div class="container">
+
+         <h1 class="h1 sale-banner-title">
+           <span class="span">Sale up to</span>70%
+         </h1>
+
+         <p class="sale-banner-text">*Cat Accessories</p>
+
+       </div>
+     </section>
+
+
+     <!-- 
+       - #PRICE-FILTER
+     -->
+
+     <section class="section price-card" id="price-card" aria-label="price filter"></section>
+     <div class="price-card">
+       <h4>Price Range Filter</h4>
+ 
+       <div class="price-content">
+         <div>
+           <label>Min</label>
+           <p id="min-value">$0</p>
+         </div>
+ 
+         <div>
+           <label>Max</label>
+           <p id="max-value">$1000</p>
+         </div>
+       </div>
+ 
+         <div class="range-slider">
+           <input type="range" class="min-price" value="100" min="0" max="1000" step="10">
+           <input type="range" class="max-price" value="250" min="0" max="1000" step="10">
+         </div>
+     </div>
+     </section>
+
+     <!-- 
+       - #PRODUCT
+     -->
+
+     <section class="section product" id="shop" aria-label="product">
+        <div class="container">
+
+        <ul class="grid-list">
+
+            <li>
+              <div class="product-card">
+
+                <div class="card-banner img-holder" style="--width: 360; --height: 360;">
+                  <img src="/images/<%=product.image%>" width="360" height="360" loading="lazy"
+                    alt="Bully Max Puppy Bundle Pack, High Protein & Growth Puppy Food, Immunity Soft Chews for Growth, Dog Supplements Plus Food
+                    " class="img-cover default">
+
+                  <button class="card-action-btn" aria-label="add to card" title="Add To Card">
+                    <ion-icon name="bag-add-outline" aria-hidden="true"></ion-icon>
+                  </button>
+                </div>
+
+                <div class="card-content">
+
+                  <div class="wrapper">
+                    <div class="rating-wrapper">
+                      <ion-icon name="star" aria-hidden="true"></ion-icon>
+                      <ion-icon name="star" aria-hidden="true"></ion-icon>
+                      <ion-icon name="star" aria-hidden="true"></ion-icon>
+                      <ion-icon name="star" aria-hidden="true"></ion-icon>
+                      <ion-icon name="star" aria-hidden="true"></ion-icon>
+                    </div>
+
+                    <span class="span">(1)</span>
+                  </div>
+
+                  <h3 class="h3">
+                    <a href="/product" class="card-title"><%=product.name%></a>
+                  </h3>
+
+                  <data class="card-price" value="15"><%=product.price%></data>
+
+                </div>
+
+              </div>
+            </li>
+        </ul>
+        </div>
+    </section>
+</main>

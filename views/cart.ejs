@@ -1,26 +1,27 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 
-<main>
-    <h1>Your Shopping Cart</h1>
-        
-    <% if (!cart.items || cart.items.length === 0) { %>
-        <p>Your shopping cart is empty.</p>
-    <% } else { %>
-        <ul>
-        <% let totalQuantity = 0; %>
-        <% cart.items.forEach(item => { %>
-            <% totalQuantity += Number(item.quantity); %>
-            <li>
-                <h2><%= item.name %></h2>
-                <p><%= item.description %></p>
-                <p>Price: <%= item.price %> USD</p>
-                <p>Quantity: <%= item.quantity %></p>
-            </li>
-        <% }); %>
-        </ul>
-        <p>Total: <%= totalQuantity %> items</p>
-    <% } %>
+<main class="main-orders">
+    <div class="order-container">
+        <table class="order-detail">
+            <h1>Your Shopping Cart</h1>
+            <% if (!products || products.length === 0) { %>
+                <p>Your shopping cart is empty.</p>
+            <% } else { %>
+            <ul>
+            <% let totalQuantity = 0; %>
+            <% cart.items.forEach(item => { %>
+                <% totalQuantity += Number(item.quantity); %>
+                <li>
+                    <h2><%= item.name %></h2>
+                    <p><%= item.description %></p>
+                    <p>Price: <%= item.price %> USD</p>
+                    <p>Quantity: <%= item.quantity %></p>
+                </li>
+            <% }); %>
+            </ul>
+            <p>Total: <%= totalQuantity %> items</p>
+        <% } %>
     <button><a href="/order-page">Order</a></button>
 </main>
 
