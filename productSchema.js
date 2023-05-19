@@ -10,14 +10,13 @@ mongoose.connect('mongodb+srv://s3979654:mypassword@cluster0.gmpia2z.mongodb.net
 });
 
 const productSchema = new mongoose.Schema({
-    id: Number,
     image: String,
     name: String,
     price: Number,
     description: String,
     category: {
         type: String,
-        enum: ['cat food', 'dog food', 'cat toys', 'dog toys'],
+        enum: ['dog page', 'cat page'],
         required: true
     }
 });

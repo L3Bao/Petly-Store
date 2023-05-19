@@ -4,21 +4,24 @@
 <main>
     <h1>Your Shopping Cart</h1>
         
-    <% if (!products || products.length === 0) { %>
+    <% if (!cart.items || cart.items.length === 0) { %>
         <p>Your shopping cart is empty.</p>
     <% } else { %>
         <ul>
-        <% products.forEach(product => { %>
+        <% let totalQuantity = 0; %>
+        <% cart.items.forEach(item => { %>
+            <% totalQuantity += Number(item.quantity); %>
             <li>
-                <h2><%= product.name %></h2>
-                <p><%= product.description %></p>
-                <p>Price: <%= product.price %> USD</p>
-                <p>Quantity: 1</p>
+                <h2><%= item.name %></h2>
+                <p><%= item.description %></p>
+                <p>Price: <%= item.price %> USD</p>
+                <p>Quantity: <%= item.quantity %></p>
             </li>
         <% }); %>
         </ul>
-        <p>Total: <%= products.length %> items</p>
+        <p>Total: <%= totalQuantity %> items</p>
     <% } %>
+    <button><a href="/order-page">Order</a></button>
 </main>
 
 <%- include('partials/footer') %>

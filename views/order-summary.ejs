@@ -2,41 +2,27 @@
 <%- include ('partials/nav') %>
 
   <!--==========Order Summary Section==========-->
-  <div class="container">
-    <main>
-      <div class="py-5 text-center">
-        <h2>Order Summary</h2>
-        <p class="lead">Thank you for your order, <%= customerName %>!</p>
-      </div>
+  <h1>Order Summary</h1>
 
-      <div class="row g-5">
-        <div class="col-md-4 col-lg-7 mx-auto">
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-primary">Your cart</span>
-            <span class="badge bg-primary rounded-pill"><%= products.length %></span>
-          </h4>
-          <ul class="list-group mb-3">
-
-            <% products.forEach(function(product){ %>
-              <li class="list-group-item d-flex justify-content-between lh-sm">
-                <div>
-                  <h6 class="my-0"><%= product.name %></h6>
-                  <small class="text-body-secondary"><%= product.description %></small>
-                </div>
-                <span class="text-body-secondary">$<%= product.price %></span>
-              </li>
-
-            <% }); %>
-
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Total (AUD)</span>
-              <strong>$<%= products.reduce((accumulator, product) => accumulator + product.price, 0).toFixed(2); %></strong>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </main>
-  </div>
+  <p>Order ID: <%= order._id %></p>
+  <p>Name: <%= order.customerName %></p>
+  <p>Address: <%= order.customerAddress %></p>
+  <p>Phone: <%= order.customerPhone %></p>
+  <p>Distribution Hub: <%= order.distributionHub %></p>
+  
+  <ul>
+  <% order.products.forEach(item => { %>
+      <li>
+          <h2><%= item.productId.name %></h2>
+          <p><%= item.productId.description %></p>
+          <p>Price: <%= item.productId.price %> USD</p>
+          <p>Quantity: <%= item.quantity %></p>
+      </li>
+  <% }); %>
+  </ul>
+  
+  <p>Total: <%= order.total %> USD</p>
+  
   <!--==========Order Summary Section==========-->
 
 

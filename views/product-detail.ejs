@@ -17,11 +17,12 @@
             <div class="product-detail">
                 <h1><%= product.name %></h1>
                 <h2 id="price">$<%= product.price.toFixed(2) %></h2>
-                <input type="number" value="1">
                 <form method="post" action="/cart">
                     <input type="hidden" value="<%= product._id.toString() %>" name="productId" />
+                    <input type="number" value="1" name="quantity" min="1" /> <!-- Add name attribute here -->
                     <button class="add-to-cart-btn">Add to cart</button>
-                  </form>
+                </form>
+                
                   
                 <button class="normal-2">Buy Now</button>
                 <h4>Description</h4>
@@ -48,4 +49,4 @@
 </section>
 
 <%- include ('partials/footer') %>
-Viết cho Lê Bảo
+

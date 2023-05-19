@@ -132,116 +132,159 @@ app.post('/signup', upload.single('profilePicture'), async (req, res) => {
   });
   
 
-
-  /* Route to get the cart page */
-// app.post('/add-to-cart/:id', (req, res) => {
-//     const productId = req.params.id;
-//     const cart = req.session.cart;
+  // Add the body-parser middleware
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
   
-//     // Query the database to get the price of the item
-//     Product.findById(productId)
-//       .then(product => {
-//         if (!product) {
-//           console.log("Product not found");
-//           return res.redirect('/customer-dashboard');
-//         }
-  
-//         // Check if this product is already in the cart
-//         if (!cart.items[productId]) {
-//           cart.items[productId] = {
-//             item: product,
-//             qty: 1,
-//             price: product.price
-//           };
-//           cart.totalQty++;
-//           cart.totalPrice += product.price;
-//         } else {
-//           cart.items[productId].qty++;
-//           cart.totalQty++;
-//           cart.totalPrice += product.price;
-//         }
-  
-//         res.redirect('/cart');
-//       })
-//       .catch(err => {
-//         console.log(err);
-//         res.redirect('/');
-//       });
-//   });
-//   app.get('/cart', (req, res) => {
-//     const cart = req.session.cart;
-  
-//     if (!cart || Object.keys(cart.items).length === 0) {
-//       // If the cart is empty or no items are present
-//       return res.render('cart', { cart: null });
-//     }
-  
-//     const productIds = Object.keys(cart.items);
-  
-//     // Fetch the products associated with the cart items from the database
-//     Product.find({ _id: { $in: productIds } })
-//       .then(products => {
-//         // Create an array to store the updated cart items with product details
-//         const updatedCartItems = productIds.map(productId => ({
-//           item: products.find(product => product._id.toString() === productId),
-//           qty: cart.items[productId].qty,
-//           price: cart.items[productId].price
-//         }));
-  
-//         res.render('cart', { cart: { items: updatedCartItems, totalQty: cart.totalQty, totalPrice: cart.totalPrice } });
-//       })
-//       .catch(err => {
-//         console.log(err);
-//         res.redirect('/');
-//       });
-//   });
-  
-
-  app.post('/cart', async (req, res) => {
+  app.post('/getProduct', async (req, res) => {
+      let payload = req.body.payload.trim();
+      let search = await Product.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
+      // Limit Search Results to 10
+      search = search.slice(0, 10);
+      res.send({ payload: search });
+    });
+app.post('/cart', async (req, res) => {
     const productId = req.body.productId;
-  
+    const quantity = parseInt(req.body.quantity) || 1;
+
     try {
-      // Retrieve the product from the database using the ObjectId
-      const product = await Product.findById(productId);
-  
-      if (!product) {
-        console.log("Product not found");
-        return res.redirect('/');
-      }
-  
-      // Log the ObjectId of the product
-      console.log("Product ObjectId:", product._id);
-  
-      // Add the product ObjectId to the cartProductIds array
-      req.session.cartProductIds = req.session.cartProductIds || [];
-      req.session.cartProductIds.push(product._id);
-  
-      // Redirect or send a response back to the client
-      res.redirect('/cart');
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            console.log("Product not found");
+            return res.redirect('/');
+        }
+
+        console.log("Product ObjectId:", product._id);
+
+        req.session.cartProductIds = req.session.cartProductIds || [];
+
+        // Find the existing product in the cart
+        const existingProduct = req.session.cartProductIds.find(item => item.id === productId);
+
+        if (existingProduct) {
+            // If the product already exists in the cart, increment the quantity
+            existingProduct.quantity += quantity;
+        } else {
+            // Otherwise, add the product to the cart
+            req.session.cartProductIds.push({ id: product._id, quantity: quantity });
+        }
+
+        res.redirect('/cart');
     } catch (err) {
-      console.log(err);
-      res.redirect('/');
+        console.log(err);
+        res.redirect('/');
     }
-  });
+});
 
-
-  
   app.get('/cart', async (req, res) => {
     const cartProductIds = req.session.cartProductIds || [];
   
     try {
-      // Fetch all the products associated with the cartProductIds from the database
-      const products = await Product.find({ _id: { $in: cartProductIds } });
+      const products = [];
+      let total = 0;
+      
+      for(let i = 0; i < cartProductIds.length; i++) {
+        const product = await Product.findById(cartProductIds[i].id);
+        if(product) {
+          products.push({...product._doc, quantity: cartProductIds[i].quantity});
+          total += product.price * cartProductIds[i].quantity;
+        }
+      }
   
-      console.log("User Object:", req.user); // Log the user object
-      console.log("User Role:", req.user.role); // Log the user role
+      const cart = { items: products, total: total }; // Update total here
   
-      res.render('cart', { products: products, user: req.user }); // Include the user object in the rendering context
+      res.render('cart', { cart: cart, user: req.user }); // pass cart instead of products
     } catch (err) {
       console.log(err);
       res.redirect('/');
     }
   });
+// place an order
+app.post('/placeOrder', async (req, res) => {
+    // get customer information from form
+    const { customerName, customerAddress, customerPhone, distributionHub } = req.body;
+  
+    const cartProductIds = req.session.cartProductIds || [];
+    try {
+      let products = [];
+      let total = 0;
+  
+      for(let i = 0; i < cartProductIds.length; i++) {
+        const product = await Product.findById(cartProductIds[i].id);
+        if(product) {
+          products.push({productId: product._id, quantity: cartProductIds[i].quantity});
+          total += product.price * cartProductIds[i].quantity;
+        }
+      }
+  
+      // create a new order
+      const newOrder = new Order({
+        customerName,
+        customerAddress,
+        customerPhone,
+        distributionHub,
+        products,
+        total,
+      });
+  
+      // save the order to database
+      await newOrder.save();
+  
+      // clear the cart
+      req.session.cartProductIds = [];
+  
+      res.redirect('/order-summary/' + newOrder._id);
+    } catch(err) {
+      console.log(err);
+      res.redirect('/');
+    }
+  });
+ //ORDER SUMMARY PAGE
+ app.get('/order-summary/:orderId', async (req, res) => {
+    const orderId = req.params.orderId;
+  
+    try {
+      const order = await Order.findById(orderId).populate('products.productId');
+      
+      res.render('order-summary', { order: order, user: req.user });
+    } catch(err) {
+      console.log(err);
+      res.redirect('/');
+    }
+  });
+    
+  
+  
+  
+
+
+  
+  app.get('/order', async (req, res) => {
+    const cartProductIds = req.session.cartProductIds || [];
+  
+    try {
+      const products = [];
+      let total = 0;
+      
+      for(let i = 0; i < cartProductIds.length; i++) {
+        const product = await Product.findById(cartProductIds[i].id);
+        if(product) {
+          products.push({...product._doc, quantity: cartProductIds[i].quantity});
+          total += product.price * cartProductIds[i].quantity;
+        }
+      }
+  
+      const cart = { items: products, total: total };
+  
+      res.render('order', { cart: cart, user: req.user });
+    } catch (err) {
+      console.log(err);
+      res.redirect('/');
+    }
+  });
+
+  
   
   
     
@@ -355,19 +398,20 @@ app.get('/manage-orders', authenticate, async (req, res) => {
     }
 });
 
+// Route handler for the shipper page
 app.get('/shipper', async (req, res) => {
     try {
-        const { distributionHub } = req.user;
-        const orders = await Order.find({ 'distributionHub': distributionHub }).populate('products');
-        const user = req.user;
-        
-        res.render('shipper', { orders, user });
+      const { distributionHub } = req.user; // Assuming you have the distributionHub property in the user object
+      const orders = await Order.find({ status: 'active', distributionHub });
+      const user = req.user;
+  
+      res.render('shipper', { orders, user });
     } catch (error) {
-        console.error('Error retrieving orders:', error);
-        res.status(500).send('An error occurred while retrieving orders');
+      console.error('Error retrieving orders:', error);
+      res.status(500).send('An error occurred while retrieving orders');
     }
-});
-
+  });
+  
 
 app.get('/vendor-dashboard', async (req, res) => {
     try {
@@ -668,18 +712,6 @@ app.post('/update-order/:id', authenticate, async (req, res) => {
     }
 });
 
-  
-// Add the body-parser middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-app.post('/getProduct', async (req, res) => {
-    let payload = req.body.payload.trim();
-    let search = await Product.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
-    // Limit Search Results to 10
-    search = search.slice(0, 10);
-    res.send({ payload: search });
-  });
   
 
 app.listen(3000, () => {

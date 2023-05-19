@@ -1,38 +1,29 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 
-    <main class="shipper_main">
-      <p class="user_advice">*Open on mobile for a better user experience!</p>
-      <div class="order_container">
-        <div class="order_status">
-          <p>Active order #<%= order._id %></p>
-        </div>
-        <div class="user_info_container">
-          <div class="avatar_username_phonenum">
-            <img src="<%= order.customer.profilePicture %>" alt="user_avatar">
-            <div class="user_info">
-              <div class="user_name">
-                <p><%= order.customer.username %></p>
-              </div>
-              <div class="phone_num">
-                <p><%= order.customer.phone %></p>
-              </div>
-            </div>
-          </div>
-          <div class="address_container">
-            <p>Address: <%= order.customer.address %></p>
-          </div>
-        </div>
-        <div class="buttons_container">
-          <a href="/order-details/<%= order._id %>">
-            <button class="details_btn">Details</button>
-          </a>
-        </div>
+<main>
+  <h1>Active Orders</h1>
+  
+  <div class="shipper-info">
+    <h2>Shipper Information</h2>
+    <p>Distribution Hub: <%= user.distributionHub %></p>
+    <!-- Display other relevant shipper information -->
+  </div>
+  
+  <% if (orders && orders.length > 0) { %>
+    <% orders.forEach(order => { %>
+      <div class="order">
+        <p>Order ID: <%= order._id %></p>
+        <p>Customer Name: <%= order.customerName %></p>
+        <p>Customer Address: <%= order.customerAddress %></p>
+        <p>Customer Phone: <%= order.customerPhone %></p>
+        <p>Order Distribution Hub: <%= order.distributionHub %></p>
+        <!-- Display other relevant order information -->
       </div>
-    <% }) %>
+    <% }); %>
   <% } else { %>
-    <p>No orders available.</p>
+    <p>No active orders available.</p>
   <% } %>
 </main>
 
-<%- include ('partials/footer') %>
+<%- include('partials/footer') %>
