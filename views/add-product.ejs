@@ -1,8 +1,6 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
 
-
-
 <div class="add-product">
   <main>
     <div class="heading">
@@ -36,6 +34,17 @@
             <div class="inputBox">            
              <span>Image</span>
               <input type="file" class="box" id="image" name="image" accept="image/*" required>
+            </div>
+          </div>
+          <!-- Add category select field -->
+          <div class="flex">
+            <div class="inputBox">
+              <span>Category</span>
+              <select class="box" id="category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="dog page">Dog</option>
+                <option value="cat page">Cat</option>
+              </select>
             </div>
           </div>
           <button type="submit" class="admin-btn">Add Product</button>

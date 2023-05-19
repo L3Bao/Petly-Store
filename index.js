@@ -413,17 +413,7 @@ const authenticate = (req, res, next) => {
   }
 };
 
-// Route to manage order page
-app.get("/manage-orders", authenticate, async (req, res) => {
-  try {
-    const orders = await Order.find().populate("products");
 
-    res.render("manage-orders", { orders, user: req.user });
-  } catch (error) {
-    console.error("Error retrieving orders:", error);
-    res.status(500).send("An error occurred while retrieving orders");
-  }
-});
 
 // Route handler for the shipper page
 app.get("/shipper", async (req, res) => {
@@ -488,17 +478,17 @@ app.post("/shipper/cancel-order/:id", async (req, res) => {
 });
 
 
-app.get("/vendor-dashboard", async (req, res) => {
+app.get("/vendor-dashboard", authenticate, async (req, res) => {
   try {
-    const products = await Product.find(); // Retrieve products from the MongoDB collection
-    const user = req.user; // Retrieve the user from the request object or session
-
-    res.render("vendor-dashboard", { products, user }); // Pass the products data to the vendor dashboard view
+    const vendorId = req.user._id;
+    const products = await Product.find({ vendor: vendorId }); // Only retrieve products associated with the current vendor
+    res.render("vendor-dashboard", { products, user: req.user });
   } catch (error) {
     console.error("Error retrieving products:", error);
     res.status(500).send("An error occurred while retrieving products");
   }
 });
+
 
 app.get("/customer-dashboard", async (req, res) => {
   try {
@@ -514,15 +504,14 @@ app.get("/customer-dashboard", async (req, res) => {
 
 // Route protected by authentication middleware and restricted to vendors
 app.get("/add-product", authenticate, (req, res) => {
-  res.render("add-product", { user: req.user }); // Pass the user variable to the add-product template
+  res.render("add-product", { user: req.user });
 });
-
 app.post(
   "/add-product",
   authenticate,
   upload.single("image"),
   async (req, res) => {
-    const { name, price, description } = req.body;
+    const { name, price, description, category } = req.body; // Include category
     const image = req.file ? req.file.path : "";
     try {
       const product = new Product({
@@ -530,6 +519,8 @@ app.post(
         price,
         description,
         image,
+        category, // Include category
+        vendor: req.user._id, // Include vendor
       });
 
       await product.save();
@@ -540,6 +531,8 @@ app.post(
     }
   }
 );
+
+
 
 app.get("/edit-product/:id", authenticate, async (req, res) => {
   try {
@@ -592,7 +585,7 @@ app.post("/update-product/:id", async (req, res) => {
 
     await product.save();
 
-    res.redirect(`/product/${product._id}`);
+    res.redirect(`/dashboard`);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error updating product");
@@ -601,7 +594,12 @@ app.post("/update-product/:id", async (req, res) => {
 
 app.post("/delete-product/:id", authenticate, async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id);
+    // Check if the product was added by the current user before deleting
+    const product = await Product.findOne({ _id: req.params.id, vendor: req.user._id });
+    if (!product) {
+      return res.status(404).send("Product not found or you do not have permission to delete this product");
+    }
+    await product.remove();
     res.redirect("/vendor-dashboard");
   } catch (error) {
     console.error("Error deleting product:", error);

@@ -1,13 +1,4 @@
 const mongoose = require('mongoose');
-const products = require('./products');
-
-mongoose.connect('mongodb+srv://s3979654:mypassword@cluster0.gmpia2z.mongodb.net/products?retryWrites=true&w=majority')
-.then(()=>{
-    console.log('Connected');
-})
-.catch((error)=>{
-    console.log(error);
-});
 
 const productSchema = new mongoose.Schema({
     image: String,
@@ -18,6 +9,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         enum: ['dog page', 'cat page'],
         required: true
+    },
+    vendor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
