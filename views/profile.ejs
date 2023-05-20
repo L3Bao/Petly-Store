@@ -5,7 +5,7 @@
   <div class="container">
     <h1>Profile</h1>
     <div class="profile-picture-container">
-      <img src="<%= user.profilePicture.replace('public', '').replace(/\\/g, '/') %>" alt="Profile Picture" class="profile-picture">
+      <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
     </div>
     <% if (user.role === 'customer') { %>
       <div class="mb-2">

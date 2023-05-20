@@ -13,8 +13,7 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
-const fs = require("fs");
-
+app.use(express.static('public'));
 
 app.use(
   session({
@@ -76,13 +75,15 @@ passport.deserializeUser(async (id, done) => {
 // config multer middleware
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/images/");
+    cb(null, 'public/images/');
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, file.originalname); 
   },
 });
+
 const upload = multer({ storage: storage });
+
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -121,6 +122,9 @@ app.post("/signup", upload.single("profilePicture"), async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Format the image path
+    const imagePath = req.file ? req.file.path.replace('public\\', '').replace(/\\/g, '/') : null;
+
     const user = new User({
       username,
       password: hashedPassword, // Store the hashed password in the database
@@ -130,7 +134,7 @@ app.post("/signup", upload.single("profilePicture"), async (req, res) => {
       customerAddress, // Save customer address if provided
       distributionHub, // Save distribution hub if provided
       name,
-      profilePicture: req.file ? req.file.path : null, // Save profile picture if provided
+      profilePicture: imagePath, // Save profile picture if provided
     });
 
     await user.save();
@@ -140,6 +144,7 @@ app.post("/signup", upload.single("profilePicture"), async (req, res) => {
     res.status(500).send("An error occurred while creating the user");
   }
 });
+
 
 // Login Route
 app.get("/login", (req, res) => {
