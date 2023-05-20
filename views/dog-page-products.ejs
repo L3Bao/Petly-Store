@@ -1,10 +1,14 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
 
-<main>
+<main class="product-page-main">
   <body>
     <h1>Dog Page Products</h1>
-
+    <form action="/products" method="GET">
+      <input type="number" name="minPrice" placeholder="Minimum Price">
+      <input type="number" name="maxPrice" placeholder="Maximum Price">
+      <input type="submit" value="Filter">
+    </form>
     <% if (products.length === 0) { %>
       <p>No products found in the Dog Page category.</p>
     <% } else { %>

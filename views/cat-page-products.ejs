@@ -1,12 +1,18 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
-<main>
+<main class="product-page-main">
 <body>
   <h1>Cat Page Products</h1>
+  <form action="/products" method="GET">
+    <input type="number" name="minPrice" placeholder="Minimum Price">
+    <input type="number" name="maxPrice" placeholder="Maximum Price">
+    <input type="submit" value="Filter">
+</form>
   
   <% if (products.length === 0) { %>
     <p>No products found in the Cat Page category.</p>
   <% } else { %>
+  <section class="show-products">
     <ul>
       <% products.forEach((product) => { %>
         <li>
@@ -17,11 +23,12 @@
           <form method="post" action="/cart">
             <input type="hidden" name="productId" value="<%= product._id %>" />
             <input type="hidden" name="quantity" value="1" />
-            <button type="submit">Add to Cart</button>
+            <button type="submit" class="flex-btn">Add to Cart</button>
           </form>
         </li>
       <% }); %>
     </ul>
+  </section>  
   <% } %>
 
   <!-- Add any additional HTML, CSS, or JavaScript as needed -->
