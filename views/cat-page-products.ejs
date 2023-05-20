@@ -19,7 +19,7 @@
           <h3><a href="/product-detail/<%= product._id %>"><%= product.name %></a></h3>
           <p>Price: <%= product.price %></p>
           <p>Description: <%= product.description %></p>
-          <!-- Add more details as needed -->
+          <img src="/images/<%= product.image.replace(/\\/g, '/').replace('public/', '')%>" alt="<%= product.image.replace(/\\/g, '/') %>">
           <form method="post" action="/cart">
             <input type="hidden" name="productId" value="<%= product._id %>" />
             <input type="hidden" name="quantity" value="1" />
