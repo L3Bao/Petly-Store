@@ -265,7 +265,7 @@ const isDashboardRoute = (route) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post("/getProduct", async (req, res) => {
+app.post("/getProduct",authenticate ,async (req, res) => {
   let payload = req.body.payload.trim();
   let search = await Product.find({
     name: { $regex: new RegExp("^" + payload + ".*", "i") },
@@ -628,16 +628,7 @@ app.post("/update-product/:id", async (req, res) => {
     if (req.body.description) {
       product.description = req.body.description;
     }
-
-    // Check if the user uploaded a new image
-    if (req.files && req.files.image) {
-      // Handle image upload here
-      // ...
-
-      // Update the image field
-      product.image = updatedImageUrl;
-    }
-
+    console.log(product);
     await product.save();
 
     res.redirect(`/dashboard`);

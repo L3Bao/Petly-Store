@@ -24,7 +24,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
           <li class="navbar-item">
             <a href="/products/cat-page" class="navbar-link" data-nav-link>Cat Page</a>
           </li>
-            <li class="navbar-item">
+          <li class="navbar-item">
             <a href="/products/dog-page" class="navbar-link" data-nav-link>Dog Page</a>
           </li>
 
@@ -61,11 +61,10 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
             </button>
 
             <% if(user.role==='customer' ) { %>
-              <button class="action-btn"  aria-label="cart">
+              <button class="action-btn" aria-label="cart">
                 <a href="/cart">
                   <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
                 </a>
-                <span class="btn-badge">0</span>
               </button>
               <% } %>
       </div>
@@ -95,12 +94,14 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
           let payload = data.payload;
           searchResults.innerHTML = '';
           if (payload.length < 1) {
+            console.log("Payload length is less than 1");
             searchResults.innerHTML = '<p>Sorry, nothing found.</p>';
             return;
           }
+
           payload.forEach((item, index) => {
             if (index > 0) searchResults.innerHTML += '<hr>';
-            searchResults.innerHTML += <a href="/product-detail/${item._id}">${item.name}</a>;
+            searchResults.innerHTML += `<a href="/product-detail/${item._id}">${item.name}</a>`;
           });
 
         });
