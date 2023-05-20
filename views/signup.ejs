@@ -1,6 +1,9 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
 
+
+  
+    
 <div class="background-imagery">
   <div class="add-product">
     <div class="heading">Sign Up</div>
@@ -9,37 +12,114 @@
       <%= errorMessage %>
     </div>
     <% } %>
-    <form action="/signup" method="POST">
-      
+    <form action="/signup" method="POST" enctype="multipart/form-data">
       <div class="flex">
         <div class="inputBox">
           <span>Username</span>
           <input type="text" class="box" id="username" name="username" required>
         </div>
-      </div>
-      
+
+
       <div class="flex">
         <div class="inputBox">
           <span>Password</span>
           <input type="password" class="box" id="password" name="password" required>
         </div>
       </div>
-      
+
       <div class="flex">
         <div class="inputBox">
           <span>Role</span>
-          <select class="box" id="box" name="role" required>
+          <select class="box" id="role" name="role" required>
+            <option value="" disabled selected>Choose your role</option>
             <option value="customer">Customer</option>
             <option value="vendor">Vendor</option>
+            <option value="shipper">Shipper</option>
           </select>
         </div>
       </div>
-      
-      <div class="login-btn">
-        <button type="submit" class="log-btn">Sign Up</button>
+      <!-- Additional fields for vendor -->
+      <div class="vendor-info role-info" id="business-info" style="display: none;">
+        <div class="flex">
+          <div class="inputBox">
+            <span>Business Name</span>
+            <input type="text" class="box" id="businessName" name="businessName">
+          </div>
+        </div>
       </div>
+      
+      <div class="vendor-info role-info" id="business-address" style="display: none;">
+        <div class="flex">
+          <div class="inputBox">
+            <span>Business Address</span>
+            <input type="text" class="box" id="businessAddress" name="businessAddress">
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional field for customer -->
+      <div class="customer-info role-info" id="name-field" style="display: none;">
+        <div class="flex">
+          <div class="inputBox">
+            <span>Name</span>
+            <input type="text" class="box" id="name" name="name">
+          </div>
+        </div>
+      </div>
+      
+      <div class="customer-info role-info" id="customer-address" style="display: none;">
+        <div class="flex">
+          <div class="inputBox">
+            <span>Address</span>
+            <input type="text" class="box" id="customerAddress" name="customerAddress">
+          </div>
+        </div>
+      </div>
+      <!-- Additional field for shipper -->
+      <div class="shipper-info role-info" id="distribution-hub" style="display: none;">
+        <div class="flex">
+          <div class="inputBox">
+            <span>Distribution Hub</span>
+            <select class="box" id="distributionHub" name="distributionHub">
+              <option value="hanoi">Hanoi</option>
+              <option value="hcm">Ho Chi Minh City</option>
+              <option value="danang">Da Nang</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Image upload field -->
+      <div class="flex">
+        <div class="inputBox">
+          <span>Profile Picture<span>
+          <input type="file" class="box" id="profilePicture" name="profilePicture">
+        </div>
+      </div>
+        <div class="login-btn">
+          <button type="submit" class="log-btn">Sign Up</button>
+        </div>
     </form>
   </div>
+
+
+<script>
+  // Get the role select element and vendor info input fields
+  const roleSelect = document.querySelector('#role');
+  const roleInfos = {
+    'vendor': document.querySelectorAll('.vendor-info'),
+    'customer': document.querySelectorAll('.customer-info'),
+    'shipper': document.querySelectorAll('.shipper-info'),
+  };
+  // Listen for changes on the role select element
+  roleSelect.addEventListener('change', function() {
+    // hide all role-specific fields
+    document.querySelectorAll('.role-info').forEach(info => info.style.display = 'none');
+    // show the selected role's fields
+    if (this.value in roleInfos) {
+      roleInfos[this.value].forEach(info => info.style.display = 'block');
+    }
+  });
+</script>
 </div>
 
 <%- include ('partials/footer') %>

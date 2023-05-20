@@ -197,7 +197,7 @@ background-color: var(--amber);
 }
 
 .flex-btn{
-    
+display: flex;    
     
 }
 
