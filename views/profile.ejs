@@ -2,7 +2,7 @@
 <%- include ('partials/nav') %>
 
 <main class="product-page-main">
-  <div class="container">
+  <div class="profile-container">
     <h1>Profile</h1>
     <div class="profile-picture-container">
       <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
@@ -32,7 +32,7 @@
       </div>
     <% } %>
 
-    <form action="/profile" method="POST" enctype="multipart/form-data">
+    <form class="profile-form" action="/profile" method="POST" enctype="multipart/form-data">
       <div class="mb-2">
         <label for="username" class="form-label">Username</label>
         <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required>
@@ -42,9 +42,9 @@
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a  href="/logout" class="btn btn-secondary sign-out">Sign Out</a> <!-- Sign Out button -->
     </form>
     <br>
-    <a href="/logout" class="btn btn-secondary">Sign Out</a> <!-- Sign Out button -->
   </div>
 </main>
 
