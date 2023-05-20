@@ -159,7 +159,8 @@ resize: none;
 
 .admin-btn,
 .delete-btn,
-.update-btn{
+.update-btn,
+.cart-btn{
     display: flex;
     width: 100%;
     margin-top: 1rem;
@@ -169,6 +170,10 @@ resize: none;
     text-transform: capitalize;
     color:var(--white);
     cursor: pointer;
+    text-align: center;
+}
+
+.cart-btn{
     text-align: center;
 }
 
@@ -184,12 +189,20 @@ background-color: var(--black);
 background-color: palevioletred;
 }
 
+.cart-btn:hover{
+    background-color: var(--red);
+}
+
 .update-btn{
 background-color: var(--amber);
 }
 
 .admin-btn{
     background-color: blue;
+}
+
+.cart-btn{
+    background-color: mediumspringgreen;
 }
 
 .delete-btn{

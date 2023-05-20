@@ -2,8 +2,21 @@
 <%- include('partials/nav') %>
 
 <main class="product-page-main">
-    <div class="order-container">
-        <table class="order-detail">
+    <div id="order-container">
+        
+        <table class="table-cart">
+            <thead>
+                <tr class="tr">
+                    <th class="th">Order ID</th>
+                    <th class="th">Customer Name</th>
+                    <th class="th">Customer Address</th>
+                    <th class="th">Customer Phone</th>
+                    <th class="th">Products</th>
+                    <th class="th">Total Price</th>
+                    <th class="th">Status</th>
+                    <th class="th">Action</th>
+                </tr>
+            </thead>
             <h1>Your Shopping Cart</h1>
             <% if (!cart.items || cart.items.length === 0) { %>
                 <p>Your shopping cart is empty.</p>
@@ -12,16 +25,22 @@
             <% let totalQuantity = 0; %>
             <% cart.items.forEach(item => { %>
                 <% totalQuantity += Number(item.quantity); %>
-                <li>
-                    <h2><%= item.name %></h2>
-                    <p>Price: <%= item.price %> USD</p>
-                    <p>Quantity: <%= item.quantity %></p>
-                </li>
+                <div class="box-thing">
+                    <li>
+                        <h2><%= item.name %></h2>
+                        <p>Price: <%= item.price %> USD</p>
+                        <p>Quantity: <%= item.quantity %></p>
+                    </li>
+                </div>
             <% }); %>
             </ul>
             <p>Total: <%= totalQuantity %> items</p>
         <% } %>
-    <button><a href="/order-page">Order</a></button>
+    </div>
+    
+    <div class="login-btn">
+        <button class="log-btn"><a href="/order-page">Order</a></button>
+    </div>
 </main>
 
 <%- include('partials/footer') %>

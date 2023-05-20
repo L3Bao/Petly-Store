@@ -13,21 +13,22 @@
     <p>No products found in the Cat Page category.</p>
   <% } else { %>
   <section class="show-products">
-    <ul>
       <% products.forEach((product) => { %>
-        <li>
-          <h3><a href="/product-detail/<%= product._id %>"><%= product.name %></a></h3>
-          <p>Price: <%= product.price %></p>
-          <p>Description: <%= product.description %></p>
-          <img src="/images/<%= product.image.replace(/\\/g, '/').replace('public/', '')%>" alt="<%= product.image.replace(/\\/g, '/') %>">
-          <form method="post" action="/cart">
-            <input type="hidden" name="productId" value="<%= product._id %>" />
-            <input type="hidden" name="quantity" value="1" />
-            <button type="submit" class="flex-btn">Add to Cart</button>
-          </form>
-        </li>
+        <div class="box-container">
+          <div class="box">
+            <span class="name"><a href="/product-detail/<%= product._id %>"><%= product.name %></a></span>
+            <span class="price">Price: <%= product.price %></span>
+            <img src="/images/<%= product.image.replace(/\\/g, '/').replace('public/', '')%>" alt="<%= product.image.replace(/\\/g, '/') %>">
+            <form method="post" action="/cart">
+              <input type="hidden" name="productId" value="<%= product._id %>" />
+              <input type="hidden" name="quantity" value="1" />
+              <div class="flex-btn">
+                <button type="submit" class="cart-btn">🛒 Add to Cart</button>
+              </div>
+            </form>
+          </div>
+        </div>
       <% }); %>
-    </ul>
   </section>  
   <% } %>
 
