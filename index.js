@@ -27,7 +27,7 @@ app.use(express.static('public'));
 
 app.use(
   session({
-    secret: "your-secret-key", // Replace with your own secret key
+    secret: "your-secret-key",
     resave: false,
     saveUninitialized: false,
   })
@@ -94,7 +94,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 10000000, // limit file size to 1MB
+    fileSize: 10000000, // limit file size to 10MB
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) { // restrict file types to jpg, jpeg, and png
@@ -195,7 +195,7 @@ app.post("/login", (req, res, next) => {
       // Authentication failed, redirect to login page with error message and previous input
       return res.render("login", {
         user: req.user,
-        message: "Invalid username or password.",
+        errorMessage: "Invalid username or password.",
         username: req.body.username, // Keep the username input
         password: req.body.password, // Keep the password input
       });
@@ -223,11 +223,11 @@ const authenticate = (req, res, next) => {
   if (req.user && req.user.role) {
     if (isDashboardRoute(req.path)) {
       if (req.user.role === "vendor" && !isVendorDashboardRoute(req.path)) {
-        res.status(403).send("Access denied"); // Vendor can only access vendor dashboard
+        return res.redirect("/login"); // Redirect to login page
       } else if (req.user.role === "customer" && !isCustomerDashboardRoute(req.path)) {
-        res.status(403).send("Access denied"); // Customer can only access customer dashboard
+        return res.redirect("/login"); // Redirect to login page
       } else if (req.user.role === "shipper" && !isShipperDashboardRoute(req.path)) {
-        res.status(403).send("Access denied"); // Shipper can only access shipper dashboard
+        return res.redirect("/login"); // Redirect to login page
       } else {
         next(); // User has access to their own dashboard
       }
@@ -235,7 +235,7 @@ const authenticate = (req, res, next) => {
       next(); // User has access to non-dashboard routes
     }
   } else {
-    res.status(401).send("Unauthorized"); // User is not authenticated, deny access
+    res.redirect("/login"); // Redirect to login page
   }
 };
 
@@ -819,45 +819,6 @@ app.post("/update-order/:id", authenticate, async (req, res) => {
     res.status(500).send("An error occurred while updating the order");
   }
 });
-
-// app.get("/edit-order/:id", authenticate, async (req, res) => {
-//   try {
-//     const orderId = req.params.id;
-//     const order = await Order.findById(orderId).populate("products");
-//     const products = await Product.find();
-
-//     res.render("edit-order", { order, products, user: req.user });
-//   } catch (error) {
-//     console.error("Error retrieving order:", error);
-//     res.status(500).send("An error occurred while retrieving the order");
-//   }
-// });
-
-// app.post("/update-order/:id", authenticate, async (req, res) => {
-//   try {
-//     const orderId = req.params.id;
-//     const { customerName, products } = req.body;
-
-//     // Find the order in the database
-//     const order = await Order.findById(orderId);
-
-//     if (!order) {
-//       return res.status(404).send("Order not found");
-//     }
-
-//     // Update the order data
-//     order.customerName = customerName;
-//     order.products = products;
-
-//     // Save the updated order
-//     await order.save();
-
-//     res.redirect("/manage-orders");
-//   } catch (error) {
-//     console.error("Error updating order:", error);
-//     res.status(500).send("An error occurred while updating the order");
-//   }
-// });
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

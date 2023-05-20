@@ -9,13 +9,12 @@
 // Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live search bar, chatgpt, Mr Tom Huynh's RMIT Store 
 
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// Define the user schema
-const userSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   password: {
     type: String,
@@ -23,32 +22,36 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    required: true,
-    enum: ['customer', 'vendor', 'shipper']
+    required: true
   },
   businessName: {
-    type: String
+    type: String,
   },
   businessAddress: {
-    type: String
+    type: String,
+  },
+  name: {
+    type: String,
   },
   customerAddress: {
-    type: String
+    type: String,
   },
   distributionHub: {
     type: String,
-    enum: ['hanoi', 'hcm', 'danang'],
-    required: function () {
-      return this.role === 'shipper';
-    }
   },
   profilePicture: {
-    type: String
+    type: String,
   },
-  name: {
-    type: String
-  }
 });
 
-// Create and export the user model
-module.exports = mongoose.model('User', userSchema);
+// Add a unique index on username
+UserSchema.index({ username: 1 }, { unique: true });
+
+// Add unique indexes on businessName and businessAddress for vendor role only
+UserSchema.index({ businessName: 1, role: 1 }, { unique: true, partialFilterExpression: { role: 'vendor' } });
+UserSchema.index({ businessAddress: 1, role: 1 }, { unique: true, partialFilterExpression: { role: 'vendor' } });
+
+const User = mongoose.model('User', UserSchema);
+
+module.exports = User;
+

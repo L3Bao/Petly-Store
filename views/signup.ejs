@@ -12,8 +12,6 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
 <%- include ('partials/nav') %>
 
 
-  
-    
 <div class="background-imagery">
   <div class="add-product">
     <div class="heading">Sign Up</div>
@@ -26,14 +24,14 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
       <div class="flex">
         <div class="inputBox">
           <span>Username</span>
-          <input type="text" class="box" id="username" name="username" required>
+          <input type="text" class="box" id="username" name="username" pattern="[a-zA-Z0-9]{8,15}" title="Username must contain only letters (lower and upper case) and digits, with a length from 8 to 15 characters" required>
         </div>
-
+      </div>
 
       <div class="flex">
         <div class="inputBox">
           <span>Password</span>
-          <input type="password" class="box" id="password" name="password" required>
+          <input type="password" class="box" id="password" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" title="Password must contain at least one uppercase letter, one lowercase letter, one digit, and be at least 8 characters long" required>
         </div>
       </div>
 
@@ -48,6 +46,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
           </select>
         </div>
       </div>
+      
       <!-- Additional fields for vendor -->
       <div class="vendor-info role-info" id="business-info" style="display: none;">
         <div class="flex">
@@ -85,6 +84,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
           </div>
         </div>
       </div>
+      
       <!-- Additional field for shipper -->
       <div class="shipper-info role-info" id="distribution-hub" style="display: none;">
         <div class="flex">
@@ -98,16 +98,18 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
           </div>
         </div>
       </div>
+      
       <!-- Image upload field -->
       <div class="flex">
         <div class="inputBox">
-          <span>Profile Picture<span>
+          <span>Profile Picture</span>
           <input type="file" class="box" id="profilePicture" name="profilePicture">
         </div>
       </div>
-        <div class="login-btn">
-          <button type="submit" class="log-btn">Sign Up</button>
-        </div>
+      
+      <div class="login-btn">
+        <button type="submit" class="log-btn">Sign Up</button>
+      </div>
     </form>
   </div>
 
@@ -120,6 +122,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
     'customer': document.querySelectorAll('.customer-info'),
     'shipper': document.querySelectorAll('.shipper-info'),
   };
+  
   // Listen for changes on the role select element
   roleSelect.addEventListener('change', function() {
     // hide all role-specific fields
@@ -130,6 +133,5 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
     }
   });
 </script>
-</div>
 
 <%- include ('partials/footer') %>
