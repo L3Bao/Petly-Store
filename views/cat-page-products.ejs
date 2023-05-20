@@ -1,36 +1,27 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
-
-
 <main>
 <body>
-    <section class="section sale-banner has-bg-image" id="home" aria-label="home"
-    style="background-image: url('/images/cat-sale-banner.png')">
-    <div class="container">
-
-      <h1 class="h1 sale-banner-title">
-        <span class="span">Sale up to</span>70%
-      </h1>
-
-      <p class="sale-banner-text">*Cat Accessories</p>
-
-    </div>
-  </section>
+  <h1>Cat Page Products</h1>
   
   <% if (products.length === 0) { %>
     <p>No products found in the Cat Page category.</p>
   <% } else { %>
-        <div id="details">
-        <% products.forEach((product) => { %>
-            <div class="product-card">
-              <img src="/images/<%=product.image%>" width="360" height="360" alt="product image">
-              <h3><%= product.name %></h3>
-              <p>Price: <%= product.price %></p>
-              <!-- <p>Description: <%= product.description %></p> -->
-              <!-- Add more details as needed -->
-            </div>
-        <% }); %>
-          </div>
+    <ul>
+      <% products.forEach((product) => { %>
+        <li>
+          <h3><a href="/product-detail/<%= product._id %>"><%= product.name %></a></h3>
+          <p>Price: <%= product.price %></p>
+          <p>Description: <%= product.description %></p>
+          <!-- Add more details as needed -->
+          <form method="post" action="/cart">
+            <input type="hidden" name="productId" value="<%= product._id %>" />
+            <input type="hidden" name="quantity" value="1" />
+            <button type="submit">Add to Cart</button>
+          </form>
+        </li>
+      <% }); %>
+    </ul>
   <% } %>
 
   <!-- Add any additional HTML, CSS, or JavaScript as needed -->

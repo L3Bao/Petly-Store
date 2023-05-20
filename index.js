@@ -137,6 +137,111 @@ app.post("/signup", upload.single("profilePicture"), async (req, res) => {
   }
 });
 
+// Login Route
+app.get("/login", (req, res) => {
+  res.render("login", { user: req.user }); // Pass the user variable to the login template
+});
+
+app.get("/dashboard", (req, res) => {
+  if (req.user && req.user.role) {
+    if (req.user.role === "vendor") {
+      res.redirect("/vendor-dashboard");
+    } else if (req.user.role === "customer") {
+      res.redirect("/customer-dashboard");
+    } else if (req.user.role === "shipper") {
+      res.redirect("/shipper");
+    } else {
+      res.status(403).send("Access denied");
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      // Authentication failed, redirect to login page with error message and previous input
+      return res.render("login", {
+        user: req.user,
+        message: "Invalid username or password.",
+        username: req.body.username, // Keep the username input
+        password: req.body.password, // Keep the password input
+      });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      // Authentication successful, redirect to dashboard or appropriate page
+      if (req.user.role === "vendor") {
+        return res.redirect("/vendor-dashboard");
+      } else if (req.user.role === "customer") {
+        return res.redirect("/customer-dashboard");
+      } else if (req.user.role === "shipper") {
+        return res.redirect("/shipper");
+      } else {
+        return res.status(403).send("Access denied");
+      }
+    });
+  })(req, res, next);
+});
+
+// Middleware to check if user is authenticated and has the required role
+const authenticate = (req, res, next) => {
+  if (req.user && req.user.role) {
+    if (isDashboardRoute(req.path)) {
+      if (req.user.role === "vendor" && !isVendorDashboardRoute(req.path)) {
+        res.status(403).send("Access denied"); // Vendor can only access vendor dashboard
+      } else if (req.user.role === "customer" && !isCustomerDashboardRoute(req.path)) {
+        res.status(403).send("Access denied"); // Customer can only access customer dashboard
+      } else if (req.user.role === "shipper" && !isShipperDashboardRoute(req.path)) {
+        res.status(403).send("Access denied"); // Shipper can only access shipper dashboard
+      } else {
+        next(); // User has access to their own dashboard
+      }
+    } else {
+      next(); // User has access to non-dashboard routes
+    }
+  } else {
+    res.status(401).send("Unauthorized"); // User is not authenticated, deny access
+  }
+};
+
+// Helper functions to check if the route belongs to a specific dashboard
+const isVendorDashboardRoute = (route) => {
+  // Define the vendor dashboard route
+  const vendorDashboardRoute = "/vendor-dashboard";
+
+  return route === vendorDashboardRoute;
+};
+
+const isCustomerDashboardRoute = (route) => {
+  // Define the customer dashboard route
+  const customerDashboardRoute = "/customer-dashboard";
+
+  return route === customerDashboardRoute;
+};
+
+const isShipperDashboardRoute = (route) => {
+  // Define the shipper dashboard route
+  const shipperDashboardRoute = "/shipper";
+
+  return route === shipperDashboardRoute;
+};
+
+const isDashboardRoute = (route) => {
+  // Define all dashboard routes
+  const dashboardRoutes = ["/vendor-dashboard", "/customer-dashboard", "/shipper"];
+
+  return dashboardRoutes.includes(route);
+};
+
+
+
 // Add the body-parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -187,7 +292,7 @@ app.post("/cart", async (req, res) => {
 });
 
 // Add a new route to display products with the category "cat page"
-app.get("/products/cat-page", async (req, res) => {
+app.get("/products/cat-page", authenticate ,async (req, res) => {
   try {
     const catPageProducts = await Product.find({ category: "cat page" });
     res.render("cat-page-products", { products: catPageProducts, user: req.user });
@@ -198,11 +303,10 @@ app.get("/products/cat-page", async (req, res) => {
 });
 
 // Add a new route to display products with the category "dog page"
-app.get("/products/dog-page", async (req, res) => {
+app.get("/products/dog-page",authenticate ,async (req, res) => {
   try {
-    const products = await Product.find({ category: "dog page" });
-
-    res.render("dog-page-products", { products });
+    const dogPageProducts = await Product.find({ category: "dog page" });
+    res.render("dog-page-products", { products:dogPageProducts, user: req.user });
   } catch (error) {
     console.error("Error retrieving dog page products:", error);
     res.status(500).send("An error occurred while retrieving dog page products");
@@ -210,7 +314,7 @@ app.get("/products/dog-page", async (req, res) => {
 });
 
 
-app.get("/cart", async (req, res) => {
+app.get("/cart",authenticate ,async (req, res) => {
   const cartProductIds = req.session.cartProductIds || [];
 
   try {
@@ -324,7 +428,7 @@ app.get("/order", async (req, res) => {
 });
 
 // Price filter //
-app.get("/products", async (req, res) => {
+app.get("/products",authenticate ,async (req, res) => {
   try {
     const minPrice = req.query.minPrice || 0; // Use 0 as the default minPrice
     const maxPrice = req.query.maxPrice || Number.MAX_SAFE_INTEGER; // Use the maximum number as the default maxPrice
@@ -345,80 +449,6 @@ app.get("/products", async (req, res) => {
 app.get("/", (req, res) => {
   res.redirect("/login");
 });
-
-// Login Route
-app.get("/login", (req, res) => {
-  res.render("login", { user: req.user }); // Pass the user variable to the login template
-});
-
-app.get("/dashboard", (req, res) => {
-  if (req.user && req.user.role) {
-    if (req.user.role === "vendor") {
-      res.redirect("/vendor-dashboard");
-    } else if (req.user.role === "customer") {
-      res.redirect("/customer-dashboard");
-    } else if (req.user.role === "shipper") {
-      res.redirect("/shipper");
-    } else {
-      res.status(403).send("Access denied");
-    }
-  } else {
-    res.redirect("/login");
-  }
-});
-
-app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      // Authentication failed, redirect to login page with error message and previous input
-      return res.render("login", {
-        user: req.user,
-        message: "Invalid username or password.",
-        username: req.body.username, // Keep the username input
-        password: req.body.password, // Keep the password input
-      });
-    }
-    req.logIn(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-      // Authentication successful, redirect to dashboard or appropriate page
-      if (req.user.role === "vendor") {
-        return res.redirect("/vendor-dashboard");
-      } else if (req.user.role === "customer") {
-        return res.redirect("/customer-dashboard");
-      } else if (req.user.role === "shipper") {
-        return res.redirect("/shipper");
-      } else {
-        return res.status(403).send("Access denied");
-      }
-    });
-  })(req, res, next);
-});
-
-// Middleware to check if user is authenticated and has the required role
-const authenticate = (req, res, next) => {
-  // Check if user is authenticated (session, token, etc.)
-  // Retrieve the user's role from the session or token
-
-  // Example implementation assuming you store user information in req.user
-  if (req.user && req.user.role) {
-    // Check if the user has the required role for access
-    if (req.user.role === "vendor") {
-      next(); // User is authenticated and has the required role, proceed to the next middleware or route handler
-    } else if (req.user.role === "customer") {
-      res.redirect("/customer-dashboard"); // Redirect customers to their dashboard
-    } else {
-      res.status(403).send("Access denied"); // User has an unrecognized role, deny access
-    }
-  } else {
-    res.redirect("/login"); // User is not authenticated, redirect to the login page
-  }
-};
-
 
 
 // Route handler for the shipper page
@@ -496,7 +526,7 @@ app.get("/vendor-dashboard", authenticate, async (req, res) => {
 });
 
 
-app.get("/customer-dashboard", async (req, res) => {
+app.get("/customer-dashboard", authenticate,async (req, res) => {
   try {
     const products = await Product.find(); // Retrieve products from the MongoDB collection
     const user = req.user; // Retrieve the user from the request object or session
@@ -614,7 +644,7 @@ app.post("/delete-product/:id", authenticate, async (req, res) => {
 });
 
 // code to route to profile page
-app.get("/profile", (req, res) => {
+app.get("/profile", authenticate,(req, res) => {
   if (req.user) {
     res.render("profile", { user: req.user });
   } else {

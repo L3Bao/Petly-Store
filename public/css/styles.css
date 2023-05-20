@@ -885,25 +885,11 @@ body {
 /*-----------------------------------*\
   #DETAIL PAGE 
 \*-----------------------------------*/
-.product-card{
-  border-style: solid;
-  width: 100px;
-  
-}
-
-.product-card img{
-  width: 200px;
-  
-}
-
 #details{
   display: flex;
   width: 100%;
   padding: 40px;
   margin-top: 50px;
-  flex-wrap: wrap;
-  margin: auto auto;
-  justify-content: space-between;
 }
 
 #details .big-img{
@@ -2063,4 +2049,15 @@ body {
   border-radius: 15px;
   margin-top: 5px;
   margin-left: 5px;
+}
+
+.add-to-cart-btn{
+  border-style: solid;
+  border-radius:4px;
+  width: 100px;
+  margin: 10px 0 10px 0;
+}
+
+.add-to-cart-btn:hover{
+  
 }

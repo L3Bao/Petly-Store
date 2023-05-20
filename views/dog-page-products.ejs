@@ -1,26 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Dog Page Products</title>
-</head>
-<body>
-  <h1>Dog Page Products</h1>
-  
-  <% if (products.length === 0) { %>
-    <p>No products found in the Dog Page category.</p>
-  <% } else { %>
-    <ul>
-      <% products.forEach((product) => { %>
-        <li>
-          <h3><%= product.name %></h3>
-          <p>Price: <%= product.price %></p>
-          <p>Description: <%= product.description %></p>
-          <!-- Add more details as needed -->
-        </li>
-      <% }); %>
-    </ul>
-  <% } %>
+<%- include ('partials/head') %>
+<%- include ('partials/nav') %>
 
-  <!-- Add any additional HTML, CSS, or JavaScript as needed -->
-</body>
-</html>
+<main>
+  <body>
+    <h1>Dog Page Products</h1>
+
+    <% if (products.length === 0) { %>
+      <p>No products found in the Dog Page category.</p>
+    <% } else { %>
+      <ul>
+        <% products.forEach((product) => { %>
+          <li>
+            <h3><a href="/product-detail/<%= product._id %>"><%= product.name %></a></h3>
+            <p>Price: <%= product.price %></p>
+            <p>Description: <%= product.description %></p>
+            <!-- Add more details as needed -->
+            <form method="post" action="/cart">
+              <input type="hidden" name="productId" value="<%= product._id %>" />
+              <input type="hidden" name="quantity" value="1" />
+              <button type="submit">Add to Cart</button>
+            </form>
+          </li>
+        <% }); %>
+      </ul>
+    <% } %>
+
+    <!-- Add any additional HTML, CSS, or JavaScript as needed -->
+  </body>
+</main>
+
+<%- include ('partials/footer') %>
