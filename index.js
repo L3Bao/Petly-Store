@@ -15,6 +15,8 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 app.use(express.static('public'));
 
+
+
 app.use(
   session({
     secret: "your-secret-key", // Replace with your own secret key
