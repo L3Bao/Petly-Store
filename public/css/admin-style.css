@@ -182,6 +182,8 @@ resize: none;
 
 .cart-btn{
     text-align: center;
+    background-color: orange;
+    align-items: center;
 }
 
 .admin-btn:hover{
@@ -208,9 +210,7 @@ background-color: var(--amber);
     background-color: blue;
 }
 
-.cart-btn{
-    background-color: orange;
-}
+
 
 .delete-btn{
     background-color: var(--red);
@@ -218,7 +218,9 @@ background-color: var(--amber);
 
 .flex-btn{
 display: flex;    
-    
+flex-direction: row;
+justify-content: baseline;
+align-items: baseline;
 }
 
 .admin-heading{

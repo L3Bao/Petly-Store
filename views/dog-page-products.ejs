@@ -33,6 +33,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
               <input type="hidden" name="productId" value="<%= product._id %>" />
               <input type="hidden" name="quantity" value="1" />
               <div class="flex-btn">
+                <button class="view-btn"><a href="/product-detail/<%= product._id %>">View</a></button>
                 <button type="submit" class="cart-btn">🛒 Add to Cart</button>
               </div>
             </form>

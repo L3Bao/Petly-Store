@@ -2144,3 +2144,29 @@ h4 {
   position: absolute;
   background-color: white;
 }
+
+.alert-danger{
+  color: black;
+  text-align: center;
+  background-color: rgb(255, 69, 69);
+  width: 50%;
+  margin: 0 auto 10px auto;
+  border-style: solid;
+  border-color: black;
+  border-radius: 4px;
+}
+
+.view-btn{
+  border-style: solid;
+  border-color: #000;
+  height: 45px;
+  border-radius: 5px;
+  margin-right: 10px;
+  width: 40%;
+}
+
+.view-btn:hover{
+  background-color: black;
+  color: white;
+  transition: background-color  0.1s;
+}
