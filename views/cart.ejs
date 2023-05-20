@@ -19,20 +19,19 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
             <table class="tables">
                 <tr class="trs">
                     <th class="ths">Order-ID</th>
-                    <th class="ths">Name</th>
-                    <th class="ths">Product</th>
+                    <th class="ths">Product Name</th>
                     <th class="ths">Total</th>
                     <th class="ths">Action</th>
                 </tr>
                 <% let totalQuantity = 0; %>
                 <% cart.items.forEach(item => { %>
                     <% totalQuantity += Number(item.quantity); %>
-                    <tr>
-                        <td><%= item.orderId %></td>
-                        <td><%= item.name %></td>
-                        <td><%= item.product %></td>
-                        <td><%= item.total %></td>
-                        <td><a href="/order-page">Order</a></td>
+                    <tr class="trs">
+                        <td class="tds"><%= item.orderId %></td>
+                        <td class="tds"><%= item.name %></td>
+                        <td class="tds"><%= item.product %></td>
+                        <td class="tds"><%= item.total %></td>
+                        <td class="tds"><a href="/order-page">Order</a></td>
                     </tr>
                 <% }); %>
             </table>

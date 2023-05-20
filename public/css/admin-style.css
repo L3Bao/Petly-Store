@@ -180,6 +180,23 @@ resize: none;
     text-align: center;
 }
 
+.cart2-btn{
+    display: flex;
+    width: 100%;
+    margin-top: 1rem;
+    border-radius: .5rem;
+    padding:1rem 3rem;
+    font-size: 1.7rem;
+    text-transform: capitalize;
+    color:var(--black);
+    cursor: pointer;
+    text-align: center;
+    background-color: orange;
+    align-items: center;
+    font-weight: 600;
+    justify-content: space-around;
+}
+
 .cart-btn{
     text-align: center;
     background-color: orange;
