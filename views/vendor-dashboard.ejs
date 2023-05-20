@@ -1,28 +1,30 @@
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
 
-
 <span class="admin-heading">Vendor Dashboard</span>
 
-<section class="show-products">
-  <% products.forEach(function(product){ %>
-    <div class="box-container">
-      <div class="box">
-        <img src="/<%= product.image.replace(/\\/g, '/').replace('public/', '') %>" alt="<%= product.image.replace(/\\/g, '/') %>">
-        <h3 class="card-title">
-          <%= product.name %>
-        </h3>
-        <h4 class="card-text text-danger">
-          <%= product.price %> AUD
-        </h4>
+<% if (products.length === 0) { %>
+  <p class="message">You have not uploaded any products. Upload your products to see them here.</p>
+<% } else { %>
+  <section class="show-products">
+    <% products.forEach(function(product){ %>
+      <div class="box-container">
+        <div class="box">
+          <img src="/<%= product.image.replace(/\\/g, '/').replace('public/', '') %>" alt="<%= product.image.replace(/\\/g, '/') %>">
+          <h3 class="card-title">
+            <%= product.name %>
+          </h3>
+          <h4 class="card-text text-danger">
+            $<%= product.price %>
+          </h4>
           <div class="flex-btn">
             <a href="product-detail/<%= product._id %>" type="button" class="admin-btn">View</a>
             <a href="/edit-product/<%= product._id %>" class="update-btn">Edit Product</a>
           </div>
+        </div>
       </div>
-    </div>
-  <% }); %>
-    
-</section>
+    <% }); %>
+  </section>
+<% } %>
 
 <%- include ('partials/footer') %>
