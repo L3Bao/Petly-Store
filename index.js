@@ -267,7 +267,7 @@ const isDashboardRoute = (route) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post("/getProduct", async (req, res) => {
+app.post("/getProduct",authenticate ,async (req, res) => {
   let payload = req.body.payload.trim();
   let search = await Product.find({
     name: { $regex: new RegExp("^" + payload + ".*", "i") },
@@ -630,16 +630,7 @@ app.post("/update-product/:id", async (req, res) => {
     if (req.body.description) {
       product.description = req.body.description;
     }
-
-    // Check if the user uploaded a new image
-    if (req.files && req.files.image) {
-      // Handle image upload here
-      // ...
-
-      // Update the image field
-      product.image = updatedImageUrl;
-    }
-
+    console.log(product);
     await product.save();
 
     res.redirect(`/dashboard`);
@@ -656,13 +647,14 @@ app.post("/delete-product/:id", authenticate, async (req, res) => {
     if (!product) {
       return res.status(404).send("Product not found or you do not have permission to delete this product");
     }
-    await product.remove();
+    await Product.findByIdAndDelete(req.params.id);
     res.redirect("/vendor-dashboard");
   } catch (error) {
     console.error("Error deleting product:", error);
     res.status(500).send("An error occurred while deleting the product");
   }
 });
+
 
 // code to route to profile page
 app.get("/profile", authenticate,(req, res) => {
