@@ -21,6 +21,21 @@
             <% if (!cart.items || cart.items.length === 0) { %>
                 <p>Your shopping cart is empty.</p>
             <% } else { %>
+<main class="main-order" id="shipper_main">
+    <h1>Your Shopping Cart</h1>
+    <% if (!cart.items || cart.items.length === 0) { %>
+        <p>Your shopping cart is empty.</p>
+    <% } else { %>
+    <div class="order-list-container">
+    <table class="tables">
+        <tr class="trs">
+            <th class="ths">Order-ID</th>
+            <th class="ths">Name</th>
+            <th class="ths">Product</th>
+            <th class="ths">Total</th>
+            <th class="ths">Action</th>
+        </tr>
+        <tr>
             <ul>
             <% let totalQuantity = 0; %>
             <% cart.items.forEach(item => { %>
@@ -42,5 +57,6 @@
         <button class="log-btn"><a href="/order-page">Order</a></button>
     </div>
 </main>
+
 
 <%- include('partials/footer') %>
