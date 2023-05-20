@@ -212,7 +212,7 @@ background-color: var(--amber);
 }
 
 .cart-btn{
-    background-color: mediumspringgreen;
+    background-color: orange;
 }
 
 .delete-btn{
@@ -247,10 +247,13 @@ margin: 1rem;
 .show-products .box-container .box{
 background-color: var(--white);
 box-shadow: var(--box-shadow);
-border-radius: .5rem;
+border-radius: 0.5rem;
 border:var(--border);
 padding:2rem;
 min-width: 30vw;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
 }
 
 .show-products .box-container .box img{
@@ -286,7 +289,7 @@ background-position: center;
 background-repeat: no-repeat;
 background-size:cover;
 }
-  
+
 @media (min-width: 575px) {
 
 /**
