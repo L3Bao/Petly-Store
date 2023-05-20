@@ -29,6 +29,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
             <span class="name"><a href="/product-detail/<%= product._id %>"><%= product.name %></a></span>
             <span class="price">Price: <%= product.price %></span>
             <img src="/images/<%= product.image.replace(/\\/g, '/').replace('public/', '')%>" alt="<%= product.image.replace(/\\/g, '/') %>">
+            <button><a href="/product-detail/<%= product._id %>">View Product</a></button>
             <form method="post" action="/cart">
               <input type="hidden" name="productId" value="<%= product._id %>" />
               <input type="hidden" name="quantity" value="1" />
