@@ -645,13 +645,14 @@ app.post("/delete-product/:id", authenticate, async (req, res) => {
     if (!product) {
       return res.status(404).send("Product not found or you do not have permission to delete this product");
     }
-    await product.remove();
+    await Product.findByIdAndDelete(req.params.id);
     res.redirect("/vendor-dashboard");
   } catch (error) {
     console.error("Error deleting product:", error);
     res.status(500).send("An error occurred while deleting the product");
   }
 });
+
 
 // code to route to profile page
 app.get("/profile", authenticate,(req, res) => {
