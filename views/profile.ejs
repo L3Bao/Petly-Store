@@ -6,10 +6,6 @@
     <h1>Profile</h1>
     <div class="profile-picture-container">
       <img src="<%= user.profilePicture.replace('public', '').replace(/\\/g, '/') %>" alt="Profile Picture" class="profile-picture">
-      <div class="mb-2">
-        <label for="profilePicture" class="form-label">Profile Picture</label>
-        <input type="file" class="form-control" id="profilePicture" name="profilePicture">
-      </div>
     </div>
 
     <% if (user.role === 'customer') { %>

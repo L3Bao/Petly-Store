@@ -12,15 +12,10 @@
             <a href="/customer-dashboard" class="navbar-link" data-nav-link>Home</a>
           </li>
           <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Shop</a>
-            <ul class="dropdown-list">
-              <li class="dropdown-item">
-                <a href="/products/cat-page">Cat Page</a>
-              </li>
-              <li class="dropdown-item">
-                <a href="/products/dog-page">Dog Page</a>
-              </li>
-            </ul>
+            <a href="/products/cat-page" class="navbar-link" data-nav-link>Cat Page</a>
+          </li>
+            <li class="navbar-item">
+            <a href="/products/dog-page" class="navbar-link" data-nav-link>Dog Page</a>
           </li>
 
           <% } else if(user && user.role==='vendor' ) { %>
@@ -93,7 +88,7 @@
           }
           payload.forEach((item, index) => {
             if (index > 0) searchResults.innerHTML += '<hr>';
-            searchResults.innerHTML += `<a href="/product-detail/${item._id}">${item.name}</a>`;
+            searchResults.innerHTML += <a href="/product-detail/${item._id}">${item.name}</a>;
           });
 
         });
