@@ -51,8 +51,10 @@
             </button>
 
             <% if(user.role==='customer' ) { %>
-              <button class="action-btn" aria-label="cart">
-                <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
+              <button class="action-btn"  aria-label="cart">
+                <a href="/cart">
+                  <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
+                </a>
                 <span class="btn-badge">0</span>
               </button>
               <% } %>
