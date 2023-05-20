@@ -13,6 +13,8 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
+const fs = require("fs");
+
 
 app.use(
   session({
@@ -105,6 +107,7 @@ app.post("/signup", upload.single("profilePicture"), async (req, res) => {
     businessAddress,
     customerAddress,
     distributionHub,
+    name,
   } = req.body;
 
   try {
@@ -126,6 +129,7 @@ app.post("/signup", upload.single("profilePicture"), async (req, res) => {
       businessAddress, // Save business address if provided
       customerAddress, // Save customer address if provided
       distributionHub, // Save distribution hub if provided
+      name,
       profilePicture: req.file ? req.file.path : null, // Save profile picture if provided
     });
 
@@ -651,26 +655,68 @@ app.get("/profile", authenticate,(req, res) => {
     res.redirect("/login");
   }
 });
-app.post("/profile", async (req, res) => {
+
+app.post("/profile", authenticate, async (req, res) => {
   if (!req.user) {
     res.redirect("/login");
     return;
   }
 
   try {
-    const { username, email } = req.body;
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
-      { username, email },
-      { new: true }
-    );
-    req.user = updatedUser; // Update the user object in the request
-
+    const { username, password, name, address, businessName, businessAddress, distributionHub } = req.body;
+    let updatedFields = {};
+  
+    // Check for updates based on user role
+    if (req.user.role === "customer") {
+      if (name !== req.user.name) {
+        updatedFields.name = name;
+      }
+      if (address !== req.user.customerAddress) {
+        updatedFields.customerAddress = address;
+      }
+    } else if (req.user.role === "vendor") {
+      if (businessName !== req.user.businessName) {
+        updatedFields.businessName = businessName;
+      }
+      if (businessAddress !== req.user.businessAddress) {
+        updatedFields.businessAddress = businessAddress;
+      }
+    } else if (req.user.role === "shipper") {
+      if (distributionHub !== req.user.distributionHub) {
+        updatedFields.distributionHub = distributionHub;
+      }
+    }
+  
+    // Update username and password fields
+    if (username !== req.user.username) {
+      updatedFields.username = username;
+    }
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updatedFields.password = hashedPassword;
+    }
+  
+    // Update the user document in MongoDB if there are any changes
+    if (Object.keys(updatedFields).length > 0) {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        updatedFields,
+        { new: true }
+      );
+      req.user = updatedUser; // Update the user object in the request
+      console.log("Updated user:", updatedUser);
+      console.log(updatedFields)
+    } else {
+      console.log("No changes to update.");
+    }
+  
     // Redirect the user to their respective dashboard
     if (req.user.role === "vendor") {
       res.redirect("/vendor-dashboard");
     } else if (req.user.role === "customer") {
       res.redirect("/customer-dashboard");
+    } else if (req.user.role === "shipper") {
+      res.redirect("/shipper");
     } else {
       res.status(403).send("Access denied");
     }
@@ -678,7 +724,12 @@ app.post("/profile", async (req, res) => {
     console.error("Error updating profile:", error);
     res.status(500).send("An error occurred while updating the profile");
   }
+  
 });
+
+
+
+
 
 // Logout route
 app.get("/logout", (req, res) => {

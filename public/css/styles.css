@@ -255,7 +255,7 @@ body {
   #HEADER
 \*-----------------------------------*/
 
-.action-btn.user { display: none; }
+/* .action-btn.user { display: none; } */
 
 .header {
   position: absolute;
