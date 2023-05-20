@@ -82,18 +82,27 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// config multer middleware
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'public/images/');
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname); 
+    cb(null, file.originalname);
   },
 });
 
-const upload = multer({ storage: storage });
-
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10000000, // limit file size to 1MB
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) { // restrict file types to jpg, jpeg, and png
+      return cb(new Error("Please upload a JPEG or PNG file"));
+    }
+    cb(undefined, true);
+  },
+});
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -265,7 +274,7 @@ const isDashboardRoute = (route) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post("/getProduct",authenticate ,async (req, res) => {
+app.post("/getProduct", authenticate, async (req, res) => {
   let payload = req.body.payload.trim();
   let search = await Product.find({
     name: { $regex: new RegExp("^" + payload + ".*", "i") },
@@ -311,7 +320,7 @@ app.post("/cart", async (req, res) => {
 });
 
 // Add a new route to display products with the category "cat page"
-app.get("/products/cat-page", authenticate ,async (req, res) => {
+app.get("/products/cat-page", authenticate, async (req, res) => {
   try {
     const catPageProducts = await Product.find({ category: "cat page" });
     res.render("cat-page-products", { products: catPageProducts, user: req.user });
@@ -322,10 +331,10 @@ app.get("/products/cat-page", authenticate ,async (req, res) => {
 });
 
 // Add a new route to display products with the category "dog page"
-app.get("/products/dog-page",authenticate ,async (req, res) => {
+app.get("/products/dog-page", authenticate, async (req, res) => {
   try {
     const dogPageProducts = await Product.find({ category: "dog page" });
-    res.render("dog-page-products", { products:dogPageProducts, user: req.user });
+    res.render("dog-page-products", { products: dogPageProducts, user: req.user });
   } catch (error) {
     console.error("Error retrieving dog page products:", error);
     res.status(500).send("An error occurred while retrieving dog page products");
@@ -333,7 +342,7 @@ app.get("/products/dog-page",authenticate ,async (req, res) => {
 });
 
 
-app.get("/cart",authenticate ,async (req, res) => {
+app.get("/cart", authenticate, async (req, res) => {
   const cartProductIds = req.session.cartProductIds || [];
 
   try {
@@ -447,7 +456,7 @@ app.get("/order", async (req, res) => {
 });
 
 // Price filter //
-app.get("/products",authenticate ,async (req, res) => {
+app.get("/products", authenticate, async (req, res) => {
   try {
     const minPrice = req.query.minPrice || 0; // Use 0 as the default minPrice
     const maxPrice = req.query.maxPrice || Number.MAX_SAFE_INTEGER; // Use the maximum number as the default maxPrice
@@ -545,7 +554,7 @@ app.get("/vendor-dashboard", authenticate, async (req, res) => {
 });
 
 
-app.get("/customer-dashboard", authenticate,async (req, res) => {
+app.get("/customer-dashboard", authenticate, async (req, res) => {
   try {
     const products = await Product.find(); // Retrieve products from the MongoDB collection
     const user = req.user; // Retrieve the user from the request object or session
@@ -610,7 +619,7 @@ app.get("/edit-product/:id", authenticate, async (req, res) => {
   }
 });
 
-app.post("/update-product/:id", async (req, res) => {
+app.post("/update-product/:id", upload.single('image'), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
@@ -628,7 +637,10 @@ app.post("/update-product/:id", async (req, res) => {
     if (req.body.description) {
       product.description = req.body.description;
     }
-    console.log(product);
+    if (req.file) {
+      product.image = req.file.path;
+    }
+
     await product.save();
 
     res.redirect(`/dashboard`);
@@ -637,6 +649,7 @@ app.post("/update-product/:id", async (req, res) => {
     res.status(500).send("Error updating product");
   }
 });
+
 
 app.post("/delete-product/:id", authenticate, async (req, res) => {
   try {
@@ -655,7 +668,7 @@ app.post("/delete-product/:id", authenticate, async (req, res) => {
 
 
 // code to route to profile page
-app.get("/profile", authenticate,(req, res) => {
+app.get("/profile", authenticate, (req, res) => {
   if (req.user) {
     res.render("profile", { user: req.user });
   } else {
@@ -663,77 +676,68 @@ app.get("/profile", authenticate,(req, res) => {
   }
 });
 
-app.post("/profile", authenticate, async (req, res) => {
-  if (!req.user) {
+app.get("/profile", authenticate, (req, res) => {
+  if (req.user) {
+    res.render("profile", { user: req.user });
+  } else {
     res.redirect("/login");
-    return;
+  }
+});
+
+app.post("/profile", authenticate, upload.single('profilePicture'), async (req, res) => {
+  // If user is not authenticated, redirect to login
+  if (!req.user) {
+    return res.redirect("/login");
   }
 
   try {
-    const { username, password, name, address, businessName, businessAddress, distributionHub } = req.body;
-    let updatedFields = {};
-  
+    const { username, password, businessName, businessAddress, distributionHub } = req.body;
+    const updates = {};
+
+    // Check if profile picture is uploaded and update it
+    if (req.file) {
+      updates.profilePicture = "/images/" + req.file.filename;
+    }
+
     // Check for updates based on user role
-    if (req.user.role === "customer") {
-      if (name !== req.user.name) {
-        updatedFields.name = name;
+    if (req.user.role === "vendor") {
+      if (businessName && businessName !== req.user.businessName) {
+        updates.businessName = businessName;
       }
-      if (address !== req.user.customerAddress) {
-        updatedFields.customerAddress = address;
+      if (businessAddress && businessAddress !== req.user.businessAddress) {
+        updates.businessAddress = businessAddress;
       }
-    } else if (req.user.role === "vendor") {
-      if (businessName !== req.user.businessName) {
-        updatedFields.businessName = businessName;
-      }
-      if (businessAddress !== req.user.businessAddress) {
-        updatedFields.businessAddress = businessAddress;
-      }
-    } else if (req.user.role === "shipper") {
-      if (distributionHub !== req.user.distributionHub) {
-        updatedFields.distributionHub = distributionHub;
+      if (distributionHub && distributionHub !== req.user.distributionHub) {
+        updates.distributionHub = distributionHub;
       }
     }
-  
+
     // Update username and password fields
-    if (username !== req.user.username) {
-      updatedFields.username = username;
+    if (username && username !== req.user.username) {
+      updates.username = username;
     }
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      updatedFields.password = hashedPassword;
+      updates.password = hashedPassword;
     }
-  
+
     // Update the user document in MongoDB if there are any changes
-    if (Object.keys(updatedFields).length > 0) {
-      const updatedUser = await User.findByIdAndUpdate(
-        req.user._id,
-        updatedFields,
-        { new: true }
-      );
+    if (Object.keys(updates).length > 0) {
+      const updatedUser = await User.findByIdAndUpdate(req.user._id, updates, { new: true });
       req.user = updatedUser; // Update the user object in the request
-      console.log("Updated user:", updatedUser);
-      console.log(updatedFields)
-    } else {
-      console.log("No changes to update.");
     }
-  
+
     // Redirect the user to their respective dashboard
     if (req.user.role === "vendor") {
-      res.redirect("/vendor-dashboard");
-    } else if (req.user.role === "customer") {
-      res.redirect("/customer-dashboard");
-    } else if (req.user.role === "shipper") {
-      res.redirect("/shipper");
+      return res.redirect("/vendor-dashboard");
     } else {
-      res.status(403).send("Access denied");
+      return res.status(403).send("Access denied");
     }
   } catch (error) {
     console.error("Error updating profile:", error);
-    res.status(500).send("An error occurred while updating the profile");
+    return res.status(500).send("An error occurred while updating the profile");
   }
-  
 });
-
 
 
 
@@ -816,44 +820,44 @@ app.post("/update-order/:id", authenticate, async (req, res) => {
   }
 });
 
-app.get("/edit-order/:id", authenticate, async (req, res) => {
-  try {
-    const orderId = req.params.id;
-    const order = await Order.findById(orderId).populate("products");
-    const products = await Product.find();
+// app.get("/edit-order/:id", authenticate, async (req, res) => {
+//   try {
+//     const orderId = req.params.id;
+//     const order = await Order.findById(orderId).populate("products");
+//     const products = await Product.find();
 
-    res.render("edit-order", { order, products, user: req.user });
-  } catch (error) {
-    console.error("Error retrieving order:", error);
-    res.status(500).send("An error occurred while retrieving the order");
-  }
-});
+//     res.render("edit-order", { order, products, user: req.user });
+//   } catch (error) {
+//     console.error("Error retrieving order:", error);
+//     res.status(500).send("An error occurred while retrieving the order");
+//   }
+// });
 
-app.post("/update-order/:id", authenticate, async (req, res) => {
-  try {
-    const orderId = req.params.id;
-    const { customerName, products } = req.body;
+// app.post("/update-order/:id", authenticate, async (req, res) => {
+//   try {
+//     const orderId = req.params.id;
+//     const { customerName, products } = req.body;
 
-    // Find the order in the database
-    const order = await Order.findById(orderId);
+//     // Find the order in the database
+//     const order = await Order.findById(orderId);
 
-    if (!order) {
-      return res.status(404).send("Order not found");
-    }
+//     if (!order) {
+//       return res.status(404).send("Order not found");
+//     }
 
-    // Update the order data
-    order.customerName = customerName;
-    order.products = products;
+//     // Update the order data
+//     order.customerName = customerName;
+//     order.products = products;
 
-    // Save the updated order
-    await order.save();
+//     // Save the updated order
+//     await order.save();
 
-    res.redirect("/manage-orders");
-  } catch (error) {
-    console.error("Error updating order:", error);
-    res.status(500).send("An error occurred while updating the order");
-  }
-});
+//     res.redirect("/manage-orders");
+//   } catch (error) {
+//     console.error("Error updating order:", error);
+//     res.status(500).send("An error occurred while updating the order");
+//   }
+// });
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

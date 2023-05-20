@@ -9,34 +9,34 @@ Author:
 Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live search bar, chatgpt, Mr Tom Huynh's RMIT Store -->
 
 <%- include ('partials/head') %>
-  <%- include ('partials/nav') %>
-    <main class="product-page-main">
+<%- include ('partials/nav') %>
+<main class="product-page-main">
 
-      <span class="admin-heading">Vendor Dashboard</span>
+  <span class="admin-heading">Vendor Dashboard</span>
 
-      <% if (products.length===0) { %>
-        <p class="message">You have not uploaded any products. Upload your products to see them here.</p>
-        <% } else { %>
-          <section class="show-products">
-            <% products.forEach(function(product){ %>
-              <div class="box-container">
-                <div class="box">
-                  <img src="/<%= product.image.replace(/\\/g, '/').replace('public/', '') %>"
-                    alt="<%= product.image.replace(/\\/g, '/') %>">
-                  <h3 class="card-title">
-                    <%= product.name %>
-                  </h3>
-                  <h4 class="card-text text-danger">
-                    $<%= product.price %>
-                  </h4>
-                  <form action="/delete-product/<%= product._id %>" method="POST">
-                    <button type="submit" class="update-btn">Delete Product</button>
-                  </form>
-
-                </div>
-              </div>
-              <% }); %>
-          </section>
-          <% } %>
-    </main>
-    <%- include ('partials/footer') %>
+  <% if (products.length === 0) { %>
+    <p class="message">You have not uploaded any products. Upload your products to see them here.</p>
+  <% } else { %>
+    <section class="show-products">
+      <% products.forEach(function(product){ %>
+        <div class="box-container">
+          <div class="box">
+            <img src="/<%= product.image.replace(/\\/g, '/').replace('public/', '') %>" alt="<%= product.image.replace(/\\/g, '/') %>">
+            <h3 class="card-title">
+              <%= product.name %>
+            </h3>
+            <h4 class="card-text text-danger">
+              $<%= product.price %>
+            </h4>
+              <a href="/edit-product/<%= product._id %>" class="update-btn">Edit Product</a>
+              <form action="/delete-product/<%= product._id %>" method="POST">
+                <button type="submit" class="update-btn">Delete Product</button>
+            </form>
+            
+          </div>
+        </div>
+      <% }); %>
+    </section>
+  <% } %>
+</main>
+<%- include ('partials/footer') %>

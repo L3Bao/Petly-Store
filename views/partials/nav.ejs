@@ -19,7 +19,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
       <ul class="navbar-list">
         <% if(user && user.role==='customer' ) { %>
           <li class="navbar-item">
-            <a href="/customer-dashboard" class="navbar-link" data-nav-link>Home</a>
+            <a href="/dashboard" class="navbar-link" data-nav-link>Home</a>
           </li>
           <li class="navbar-item">
             <a href="/products/cat-page" class="navbar-link" data-nav-link>Cat Page</a>
@@ -37,7 +37,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
             </li>
             <% } else if(user && user.role==='shipper' ) { %>
               <li class="navbar-item">
-                <a href="/customer-dashboard" class="navbar-link" data-nav-link>Home</a>
+                <a href="/dashboard" class="navbar-link" data-nav-link>Home</a>
               </li>
               <% } %>
       </ul>

@@ -14,35 +14,40 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
 <main class="product-page-main">
   <div class="profile-container">
     <h1>Profile</h1>
-    <div class="profile-picture-container">
-      <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
-    </div>
-    <% if (user.role === 'customer') { %>
-      <div class="mb-2">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name" value="<%= user.name || '' %>" required>
-      </div>
-      <div class="mb-2">
-        <label for="address" class="form-label">Address</label>
-        <input type="text" class="form-control" id="address" name="address" value="<%= user.customerAddress || '' %>" required>
-      </div>
-    <% } else if (user.role === 'vendor') { %>
-      <div class="mb-2">
-        <label for="businessName" class="form-label">Business Name</label>
-        <input type="text" class="form-control" id="businessName" name="businessName" value="<%= user.businessName || '' %>" required>
-      </div>
-      <div class="mb-2">
-        <label for="businessAddress" class="form-label">Business Address</label>
-        <input type="text" class="form-control" id="businessAddress" name="businessAddress" value="<%= user.businessAddress || '' %>" required>
-      </div>
-    <% } else if (user.role === 'shipper') { %>
-      <div class="mb-2">
-        <label for="distributionHub" class="form-label">Distribution Hub</label>
-        <input type="text" class="form-control" id="distributionHub" name="distributionHub" value="<%= user.distributionHub || '' %>" required>
-      </div>
-    <% } %>
-
     <form class="profile-form" action="/profile" method="POST" enctype="multipart/form-data">
+      <div class="profile-picture-container">
+        <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-picture">
+        <div class="mb-3">
+          <label for="profilePicture" class="form-label">Profile Picture</label>
+          <input type="file" class="form-control" id="profilePicture" name="profilePicture">
+        </div>
+      </div>
+      
+      <% if (user.role === 'customer') { %>
+        <div class="mb-2">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name" name="name" value="<%= user.name || '' %>" required>
+        </div>
+        <div class="mb-2">
+          <label for="address" class="form-label">Address</label>
+          <input type="text" class="form-control" id="address" name="address" value="<%= user.customerAddress || '' %>" required>
+        </div>
+      <% } else if (user.role === 'vendor') { %>
+        <div class="mb-2">
+          <label for="businessName" class="form-label">Business Name</label>
+          <input type="text" class="form-control" id="businessName" name="businessName" value="<%= user.businessName || '' %>" required>
+        </div>
+        <div class="mb-2">
+          <label for="businessAddress" class="form-label">Business Address</label>
+          <input type="text" class="form-control" id="businessAddress" name="businessAddress" value="<%= user.businessAddress || '' %>" required>
+        </div>
+      <% } else if (user.role === 'shipper') { %>
+        <div class="mb-2">
+          <label for="distributionHub" class="form-label">Distribution Hub</label>
+          <input type="text" class="form-control" id="distributionHub" name="distributionHub" value="<%= user.distributionHub || '' %>" required>
+        </div>
+      <% } %>
+
       <div class="mb-2">
         <label for="username" class="form-label">Username</label>
         <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required>
@@ -52,8 +57,8 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <button type="submit" class="btn btn-primary">Save Changes</button>
-      <a  href="/logout" class="btn btn-secondary sign-out">Sign Out</a> <!-- Sign Out button -->
     </form>
+    <a  href="/logout" class="btn btn-secondary sign-out">Sign Out</a> <!-- Sign Out button -->
     <br>
   </div>
 </main>
