@@ -1,108 +1,127 @@
 <header class="header" data-header>
   <div class="container">
     <button class="nav-toggle-btn" aria-label="toggle manu" data-nav-toggler>
-      <ion-icon name="menu-outline" aria-hidden="true" class="menu-icon"></ion-icon>
-      <ion-icon name="close-outline" aria-label="true" class="close-icon"></ion-icon>
+      <ion-icon
+        name="menu-outline"
+        aria-hidden="true"
+        class="menu-icon"
+      ></ion-icon>
+      <ion-icon
+        name="close-outline"
+        aria-label="true"
+        class="close-icon"
+      ></ion-icon>
     </button>
-    <a href="<%= user && user.role === 'vendor' ? '/vendor-dashboard' : '/customer-dashboard' %>" class="logo">Petly</a>
+    <a
+      href="<%= user && user.role === 'vendor' ? '/vendor-dashboard' : '/customer-dashboard' %>"
+      class="logo"
+      >Petly</a
+    >
     <nav class="navbar" data-navbar>
       <ul class="navbar-list">
         <% if(user && user.role==='customer' ) { %>
-          <li class="navbar-item">
-            <a href="/customer-dashboard" class="navbar-link" data-nav-link>Home</a>
-          </li>
-          <li class="navbar-item">
-            <a href="products/dog-page" class="navbar-link" data-nav-link>Dog Page</a>
-          </li>
-          <li class="navbar-item">
-            <a href="products/cat-page" class="navbar-link" data-nav-link>Cat Page</a>
-          </li>
+        <li class="navbar-item">
+          <a href="/customer-dashboard" class="navbar-link" data-nav-link
+            >Home</a
+          >
+        </li>
+        <li class="navbar-item">
+          <a href="products/dog-page" class="navbar-link" data-nav-link
+            >Dog Page</a
+          >
+        </li>
+        <li class="navbar-item">
+          <a href="products/cat-page" class="navbar-link" data-nav-link
+            >Cat Page</a
+          >
+        </li>
 
-          <% } else if(user && user.role==='vendor' ) { %>
-            <li class="navbar-item">
-              <a href="/vendor-dashboard" class="navbar-link" data-nav-link>Home</a>
-            </li>
-            <li class="navbar-item">
-              <a href="/add-product" class="navbar-link" data-nav-link>Add Products</a>
-            </li>
-            <% } else if(user && user.role==='shipper' ) { %>
-              <li class="navbar-item">
-                <a href="/customer-dashboard" class="navbar-link" data-nav-link>Home</a>
-              </li>
-              <% } %>
+        <% } else if(user && user.role==='vendor' ) { %>
+        <li class="navbar-item">
+          <a href="/vendor-dashboard" class="navbar-link" data-nav-link>Home</a>
+        </li>
+        <li class="navbar-item">
+          <a href="/add-product" class="navbar-link" data-nav-link
+            >Add Products</a
+          >
+        </li>
+        <% } else if(user && user.role==='shipper' ) { %>
+        <li class="navbar-item">
+          <a href="/customer-dashboard" class="navbar-link" data-nav-link
+            >Home</a
+          >
+        </li>
+        <% } %>
       </ul>
     </nav>
 
     <% if(user) { %>
-      <div class="header-actions">
-        <% if(user.role==='customer' ) { %>
-          <div class="search-box" aria-label="Search">
-            <button class="btn-search">
-              <ion-icon name="search-outline"></ion-icon>
-            </button>
-            <input type="search" id="search-bar" class="input-search" placeholder="Type to Search..."
-              onkeyup="sendData(this)">
-            <section id="searchResults"></section>
-          </div>
-          <% } %>
-
-            <button class="action-btn user" aria-label="User">
-              <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
-                <ul class="dropdown-list">
-                  <li class="dropdown-item">
-                    <a href="/profile">Profile</a>
-                  </li>
-                  <li class="dropdown-item">
-                    <a href="/login">Log Out</a>
-                  </li>
-                </ul>
-              </li>
-            </button>
-
-            <% if(user.role==='customer' ) { %>
-              <button class="action-btn" aria-label="cart">
-                <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
-                <span class="btn-badge">0</span>
-              </button>
-              <% } %>
+    <div class="header-actions">
+      <% if(user.role==='customer' ) { %>
+      <div class="search-box" aria-label="Search">
+        <button class="btn-search">
+          <ion-icon name="search-outline"></ion-icon>
+        </button>
+        <input
+          type="search"
+          id="search-bar"
+          class="input-search"
+          placeholder="Type to Search..."
+          onkeyup="sendData(this)"
+        />
+        <section id="searchResults"></section>
       </div>
       <% } %>
+
+      <button class="action-btn" aria-label="cart">
+        <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
+        <span class="btn-badge">0</span>
+      </button>
+
+      <% if(user.role==='customer' ) { %>
+      <button class="action-btn" aria-label="cart">
+        <a href="/profile">
+          <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+        </a>
+      </button>
+      <% } %>
+    </div>
+    <% } %>
   </div>
 </header>
 
 <script>
   function sendData(e) {
-    const searchResults = document.getElementById('searchResults');
+    const searchResults = document.getElementById("searchResults");
     let match = e.value.match(/^[a-zA-Z ]*/);
     let match2 = e.value.match(/\s*/);
     if (match2[0] === e.value) {
-      searchResults.innerHTML = '';
+      searchResults.innerHTML = "";
       return;
     }
     if (match[0] === e.value) {
-      fetch('getProduct', {
+      fetch("getProduct", {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ payload: e.value })
+        body: JSON.stringify({ payload: e.value }),
       })
-        .then(res => res.json()) // Invoke .json() to parse response data
-        .then(data => {
+        .then((res) => res.json()) // Invoke .json() to parse response data
+        .then((data) => {
           let payload = data.payload;
-          searchResults.innerHTML = '';
+          searchResults.innerHTML = "";
           if (payload.length < 1) {
-            searchResults.innerHTML = '<p>Sorry, nothing found.</p>';
+            searchResults.innerHTML = "<p>Sorry, nothing found.</p>";
             return;
           }
           payload.forEach((item, index) => {
-            if (index > 0) searchResults.innerHTML += '<hr>';
+            if (index > 0) searchResults.innerHTML += "<hr>";
             searchResults.innerHTML += `<a href="/product-detail/${item._id}">${item.name}</a>`;
           });
-
         });
       return;
     }
-    searchResults.innerHTML = '';
+    searchResults.innerHTML = "";
   }
 </script>
