@@ -101,6 +101,8 @@
 /*-----------------------------------*\
   #ADMIN STYLE
 \*-----------------------------------*/
+
+/*Styling for the add product page and also any forms for vendors*/
 .add-product .heading{
     margin-top: 15rem;
     font-size: 4rem;
@@ -114,7 +116,7 @@
 .add-product form{
 margin: 0 auto ;
 max-width: 70rem;
-background-color: var(--bright-yellow-crayola);
+background-color: var(--silver-chalice);
 border-radius: .5rem;
 box-shadow: var(--box-shadow);
 border: var(--border);
@@ -153,10 +155,12 @@ height: 5.75rem;
 resize: none;
 }
 
+/*Vendor buttons styling*/
+
 .admin-btn,
 .delete-btn,
 .update-btn{
-    display: block;
+    display: flex;
     width: 100%;
     margin-top: 1rem;
     border-radius: .5rem;
@@ -169,7 +173,7 @@ resize: none;
 }
 
 .admin-btn:hover{
-    background-color: var(--amber);
+    background-color: var(--main-color);
 }
 
 .update-btn:hover{
@@ -177,7 +181,7 @@ background-color: var(--black);
 }
 
 .delete-btn:hover{
-background-color: var(--light-color);
+background-color: palevioletred;
 }
 
 .update-btn{
@@ -185,7 +189,7 @@ background-color: var(--amber);
 }
 
 .admin-btn{
-    background-color: var(--portland-orange);
+    background-color: blue;
 }
 
 .delete-btn{
@@ -193,8 +197,8 @@ background-color: var(--amber);
 }
 
 .flex-btn{
-    display: flex;
-    gap:1rem;
+    
+    
 }
 
 .admin-heading{
@@ -202,6 +206,8 @@ padding-top: 2rem;
 font-size: 4rem;
 margin-left: 3.5%;
 }
+
+/*Vendor dashboard styling*/
 
 .show-products{
 display: flex;
@@ -221,13 +227,16 @@ box-shadow: var(--box-shadow);
 border-radius: .5rem;
 border:var(--border);
 padding:2rem;
+min-width: 30vw;
 }
 
 .show-products .box-container .box img{
-width: 100%;
-height: 20rem;
+max-width: auto;
+margin-left: auto;
+margin-right: auto;
 object-fit: contain;
 margin-bottom: 1.5rem;
+min-height: 20vh;
 }
 
 .show-products .box-container .box .name{
@@ -245,6 +254,14 @@ margin:.5rem 0;
 font-size: 1.5rem;
 color:var(--light-color);
 line-height: 2;
+}
+
+.background-imagery{
+background-image: url(/images/cta-bg.jpg);
+height: 80vh;
+background-position: center;
+background-repeat: no-repeat;
+background-size:cover;
 }
   
 @media (min-width: 575px) {
@@ -286,5 +303,9 @@ line-height: 2;
     min-width: 190;
 }
 
+.show-products .box-container .box img{
+    height: 20vw;
+    width: 20vh;
+}
 
 }  
