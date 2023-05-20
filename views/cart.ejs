@@ -11,61 +11,35 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 
-<main class="product-page-main">
-    <div id="order-container">
-        
-        <table class="table-cart">
-            <thead>
-                <tr class="tr">
-                    <th class="th">Order ID</th>
-                    <th class="th">Customer Name</th>
-                    <th class="th">Customer Address</th>
-                    <th class="th">Customer Phone</th>
-                    <th class="th">Products</th>
-                    <th class="th">Total Price</th>
-                    <th class="th">Status</th>
-                    <th class="th">Action</th>
-                </tr>
-            </thead>
-            <h1>Your Shopping Cart</h1>
-            <% if (!cart.items || cart.items.length === 0) { %>
-                <p>Your shopping cart is empty.</p>
-            <% } else { %>
 <main class="main-order" id="shipper_main">
     <h1>Your Shopping Cart</h1>
     <% if (!cart.items || cart.items.length === 0) { %>
         <p>Your shopping cart is empty.</p>
     <% } else { %>
-    <div class="order-list-container">
-    <table class="tables">
-        <tr class="trs">
-            <th class="ths">Order-ID</th>
-            <th class="ths">Name</th>
-            <th class="ths">Product</th>
-            <th class="ths">Total</th>
-            <th class="ths">Action</th>
-        </tr>
-        <tr>
-            <ul>
-            <% let totalQuantity = 0; %>
-            <% cart.items.forEach(item => { %>
-                <% totalQuantity += Number(item.quantity); %>
-                <div class="box-thing">
-                    <li>
-                        <h2><%= item.name %></h2>
-                        <p>Price: <%= item.price %> USD</p>
-                        <p>Quantity: <%= item.quantity %></p>
-                    </li>
-                </div>
-            <% }); %>
-            </ul>
+        <div class="order-list-container">
+            <table class="tables">
+                <tr class="trs">
+                    <th class="ths">Order-ID</th>
+                    <th class="ths">Name</th>
+                    <th class="ths">Product</th>
+                    <th class="ths">Total</th>
+                    <th class="ths">Action</th>
+                </tr>
+                <% let totalQuantity = 0; %>
+                <% cart.items.forEach(item => { %>
+                    <% totalQuantity += Number(item.quantity); %>
+                    <tr>
+                        <td><%= item.orderId %></td>
+                        <td><%= item.name %></td>
+                        <td><%= item.product %></td>
+                        <td><%= item.total %></td>
+                        <td><a href="/order-page">Order</a></td>
+                    </tr>
+                <% }); %>
+            </table>
             <p>Total: <%= totalQuantity %> items</p>
-        <% } %>
-    </div>
-    
-    <div class="login-btn">
-        <button class="log-btn"><a href="/order-page">Order</a></button>
-    </div>
+        </div>
+    <% } %>
 </main>
 
 
