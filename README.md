@@ -9,7 +9,7 @@ https://youtu.be/QRxSXnwjcpo
   - username: vendor 
   - passwords: 123
 3. Customer:
-  - username: Tom
+  - username: customer
   - passwords: 123
 5. Shipper:
   - username: shipper
