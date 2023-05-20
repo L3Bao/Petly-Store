@@ -11,7 +11,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
 <%- include ('partials/head') %>
 <%- include ('partials/nav') %>
 
-<main>
+<main id="shipper_main">
 
     <!-- 
       - PRODUCT DETAIL
@@ -24,7 +24,7 @@ Acknowledgement: https://youtube.com/watch?v=991fdnSllcw&feature=share - live se
                 </div>
             </div> 
 
-            <div class="product-detail">
+            <div class="book-detail">
                 <h1><%= product.name %></h1>
                 <h2 id="price">$<%= product.price.toFixed(2) %></h2>
                 <form method="post" action="/cart">
