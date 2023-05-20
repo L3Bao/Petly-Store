@@ -19,8 +19,9 @@
               $<%= product.price %>
             </h4>
             <div class="flex-btn">
-
+              <a href="product/<%= product._id %>" type="button" class="admin-btn">View</a>
               <a href="/edit-product/<%= product._id %>" class="update-btn">Edit Product</a>
+              <a href="/product/<%= product._id %>/delete" type="button" class="delete-btn">Delete</a>
             </div>
           </div>
         </div>
