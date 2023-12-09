@@ -11,7 +11,7 @@ const products = require('./products');
 
 async function connectDB() {
     try {
-      await mongoose.connect('mongodb+srv://s3979654:mypassword@cluster0.gmpia2z.mongodb.net/products?retryWrites=true&w=majority', {
+      await mongoose.connect('mongodb+srv://User002:57mMSqwlj6OCpVVW@cluster0.r10fdfw.mongodb.net/?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
       });
